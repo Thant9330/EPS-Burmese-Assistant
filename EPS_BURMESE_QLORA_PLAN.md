@@ -31,7 +31,7 @@ Burmese question
       ↓
   English/Korean corpus  ──BGE-M3 or e5-large──►  top-k chunks (English)
       ↓
-  FINE-TUNED Qwen  ← this is the only trained component
+  FINE-TUNED SEA-LION/Gemma2  ← this is the only trained component
       ↓
   Burmese answer, grounded in chunks, Korean terms preserved + glossed,
   citation, disclaimer, or explicit refusal
@@ -63,12 +63,19 @@ individualized legal judgment.
 
 ## Phases
 
-### Phase 0 — Tokenizer fertility check (~30 min, do this FIRST)
-Measure tokens-per-character for Burmese script across candidate bases:
-Qwen3-8B, Gemma-3, Llama-3.1-8B. Burmese is typically 3–5x more expensive than English.
+### Phase 0 — Tokenizer fertility check ✅ DONE (2026-09-01)
 
-This single number decides base model, `max_seq_length`, VRAM, and whether free Colab suffices.
-It's also the cheapest possible first lesson in why tokenizers matter.
+Measured Burmese tokens-per-meaning across 6 tokenizers. Full results and method:
+[`PHASE0_TOKENIZER_RESULTS.md`](PHASE0_TOKENIZER_RESULTS.md); script:
+`scripts/phase0_tokenizer_fertility.py`.
+
+**Outcome — the base model changed.** Qwen 2.5/3 has essentially no Burmese in its 151k
+vocab and falls back to raw UTF-8 bytes (6.03x English cost; the word ဗီဇာ becomes 7 byte
+fragments). `aisingapore/gemma2-9b-cpt-sea-lionv3-instruct` costs 3.32x, tokenizes into real
+Burmese characters, and is already continued-pretrained on SEA languages including Burmese.
+Sailor2 shares Qwen's tokenizer (no help); SEA-LION on Llama 3.1 is worse at 7.79x.
+
+Decisions locked: base = SEA-LION/Gemma2 9B · `max_seq_length` = 2048 · free Colab T4 suffices.
 
 ### Phase 1 — Corpus build
 50–150 authoritative documents: HiKorea, EPS (eps.go.kr), MOEL notices, Immigration Act
@@ -116,8 +123,9 @@ eval table (both columns), and training notebook.
 
 ## Hardware
 
-Start on **free Colab T4** — QLoRA on a 7–8B fits fine. Only pay for Pro if Phase 0 shows
-Burmese fertility forces `max_seq_length` past ~2048. Decide with the number, not upfront.
+Start on **free Colab T4 (16GB)** — confirmed sufficient by Phase 0: 9B in 4-bit is ~5.5GB
+weights and real examples land near 600 tokens, well inside `max_seq_length` 2048. Revisit
+only if Phase 3 data proves much longer than sampled.
 
 Note: the `colab-mcp` server failed to connect this session (CONNECT_TIMEOUT). Worth fixing
 or retrying before Phase 5, otherwise drive Colab manually.
