@@ -1,0 +1,41 @@
+# --- Model weights & adapters (NEVER commit these) ---
+*.gguf
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+adapters/
+checkpoints/
+outputs/
+merged_model/
+lora_model/
+
+# --- Datasets & corpus (track schema/samples, not bulk) ---
+data/raw/
+data/interim/
+data/processed/
+*.jsonl
+!data/samples/*.jsonl
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.ipynb_checkpoints/
+
+# --- Secrets ---
+.env
+.env.*
+*_token
+hf_token*
+
+# --- OS / editor ---
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
