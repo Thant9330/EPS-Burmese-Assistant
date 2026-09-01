@@ -1,0 +1,109 @@
+{
+  "_comment": "Phase 1 corpus sources - primary/authoritative only. Every entry's license_note is copied onto each chunk so the model can disclaim correctly. robots.txt checked 2026-09-01: law.go.kr 'Allow: /'; elaw.klri.re.kr blocks only search/admin endpoints (viewer.do is allowed); eps.go.kr 'Allow: /'.",
+  "_known_gap": "Korean-language originals are not yet ingested - law.go.kr Korean pages are JS-rendered and returned only a shell. Retrieval is English-side by design (see plan), so this is deferred, not blocking. Korean official terms are handled via a Phase 3 glossary instead.",
+  "sources": [
+    {
+      "id": "eps_act_eng",
+      "title": "Act on the Employment, etc. of Foreign Workers",
+      "url": "https://www.law.go.kr/LSW/engLsInfoR.do?lsiSeq=231477",
+      "lang": "en",
+      "authority": "Korea Ministry of Government Legislation (law.go.kr)",
+      "doc_type": "statute",
+      "topics": [
+        "eps",
+        "e-9",
+        "employment_permit",
+        "workplace_change"
+      ],
+      "license_note": "Unofficial English translation. Not legally effective; the Korean original governs."
+    },
+    {
+      "id": "immigration_act_eng",
+      "title": "Immigration Act",
+      "url": "https://www.law.go.kr/LSW/engLsInfoR.do?lsiSeq=90211",
+      "lang": "en",
+      "authority": "Korea Ministry of Government Legislation (law.go.kr)",
+      "doc_type": "statute",
+      "topics": [
+        "immigration",
+        "visa",
+        "alien_registration",
+        "stay"
+      ],
+      "license_note": "Unofficial English translation. Not legally effective; the Korean original governs."
+    },
+    {
+      "id": "eps_decree_eng",
+      "title": "Enforcement Decree of the Act on the Employment of Foreign Workers",
+      "url": "https://elaw.klri.re.kr/eng_mobile/viewer.do?hseq=57152&type=part&key=40",
+      "lang": "en",
+      "authority": "Korea Legislation Research Institute (KLRI)",
+      "doc_type": "enforcement_decree",
+      "topics": [
+        "eps",
+        "e-9",
+        "workplace_change",
+        "procedure"
+      ],
+      "license_note": "Unofficial English translation (KLRI). For reference only; neither official nor legally effective."
+    },
+    {
+      "id": "minimum_wage_act_eng",
+      "title": "Minimum Wage Act",
+      "url": "https://elaw.klri.re.kr/eng_mobile/viewer.do?hseq=48699&type=part&key=40",
+      "lang": "en",
+      "authority": "Korea Legislation Research Institute (KLRI)",
+      "doc_type": "statute",
+      "topics": [
+        "wages",
+        "minimum_wage",
+        "labour_rights"
+      ],
+      "license_note": "Unofficial English translation (KLRI). For reference only; neither official nor legally effective."
+    },
+    {
+      "id": "labor_standards_decree_eng",
+      "title": "Enforcement Decree of the Labor Standards Act",
+      "url": "https://elaw.klri.re.kr/eng_mobile/viewer.do?hseq=59933&type=part&key=40",
+      "lang": "en",
+      "authority": "Korea Legislation Research Institute (KLRI)",
+      "doc_type": "enforcement_decree",
+      "topics": [
+        "wages",
+        "working_hours",
+        "severance",
+        "labour_rights"
+      ],
+      "license_note": "Unofficial English translation (KLRI). For reference only; neither official nor legally effective."
+    },
+    {
+      "id": "industrial_accident_decree_eng",
+      "title": "Enforcement Decree of the Industrial Accident Compensation Insurance Act",
+      "url": "https://elaw.klri.re.kr/eng_mobile/viewer.do?hseq=67169&type=sogan&key=6",
+      "lang": "en",
+      "authority": "Korea Legislation Research Institute (KLRI)",
+      "doc_type": "enforcement_decree",
+      "topics": [
+        "industrial_accident",
+        "insurance",
+        "compensation"
+      ],
+      "license_note": "Unofficial English translation (KLRI). For reference only; neither official nor legally effective.",
+      "_verified": "hseq=67169 serves the Enforcement Decree, not the parent Act (verified 2026-09-01)"
+    },
+    {
+      "id": "insurance_premiums_act_eng",
+      "title": "Act on the Collection of Insurance Premiums for Employment Insurance and Industrial Accident Compensation Insurance",
+      "url": "https://elaw.klri.re.kr/eng_mobile/viewer.do?hseq=60974&type=part&key=40",
+      "lang": "en",
+      "authority": "Korea Legislation Research Institute (KLRI)",
+      "doc_type": "statute",
+      "topics": [
+        "insurance",
+        "premiums",
+        "employment_insurance"
+      ],
+      "license_note": "Unofficial English translation (KLRI). For reference only; neither official nor legally effective."
+    }
+  ]
+}

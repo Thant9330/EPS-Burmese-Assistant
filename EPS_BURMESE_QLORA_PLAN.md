@@ -77,10 +77,21 @@ Sailor2 shares Qwen's tokenizer (no help); SEA-LION on Llama 3.1 is worse at 7.7
 
 Decisions locked: base = SEA-LION/Gemma2 9B · `max_seq_length` = 2048 · free Colab T4 suffices.
 
-### Phase 1 — Corpus build
-50–150 authoritative documents: HiKorea, EPS (eps.go.kr), MOEL notices, Immigration Act
-enforcement decrees. Keep Korean originals + English versions. Chunk ~500 tokens, keep
-source URL + retrieval date on every chunk.
+### Phase 1 — Corpus build ✅ DONE (2026-09-01)
+
+**402 chunks · 199,961 tokens · 7 primary legal documents**, English, full provenance on every
+chunk. Chunked at 500 tokens/50 overlap with the Phase 0 tokenizer. Results and compliance
+record: [`PHASE1_CORPUS_RESULTS.md`](PHASE1_CORPUS_RESULTS.md); builder:
+`scripts/phase1_build_corpus.py`; manifest: `data/sources.json`.
+
+Sources: EPS Act + its Enforcement Decree, Immigration Act, Minimum Wage Act, Labor Standards
+Act Enforcement Decree, Industrial Accident Compensation Insurance Enforcement Decree, and the
+Insurance Premiums Collection Act. robots.txt verified for every domain before fetching.
+
+**Open gap to address in Phase 2:** workplace change (사업장 변경) has only 7 chunks despite
+being the most-asked E-9 question — statutes carry the principle, but the operational detail
+lives in MOEL notices and eps.go.kr guidance that are not yet ingested. Korean-language
+originals are also still missing (law.go.kr Korean pages are JS-rendered).
 
 ### Phase 2 — Retrieval smoke test (directly tests the embedding fear)
 Write 20 real Burmese questions. Compare recall@5 under two strategies:
