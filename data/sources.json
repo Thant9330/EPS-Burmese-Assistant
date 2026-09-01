@@ -15,7 +15,9 @@
         "employment_permit",
         "workplace_change"
       ],
-      "license_note": "Unofficial English translation. Not legally effective; the Korean original governs."
+      "license_note": "Unofficial English translation. Not legally effective; the Korean original governs.",
+      "extractor": "statute",
+      "min_chars": 2000
     },
     {
       "id": "immigration_act_eng",
@@ -30,7 +32,9 @@
         "alien_registration",
         "stay"
       ],
-      "license_note": "Unofficial English translation. Not legally effective; the Korean original governs."
+      "license_note": "Unofficial English translation. Not legally effective; the Korean original governs.",
+      "extractor": "statute",
+      "min_chars": 2000
     },
     {
       "id": "eps_decree_eng",
@@ -45,7 +49,9 @@
         "workplace_change",
         "procedure"
       ],
-      "license_note": "Unofficial English translation (KLRI). For reference only; neither official nor legally effective."
+      "license_note": "Unofficial English translation (KLRI). For reference only; neither official nor legally effective.",
+      "extractor": "statute",
+      "min_chars": 2000
     },
     {
       "id": "minimum_wage_act_eng",
@@ -59,7 +65,9 @@
         "minimum_wage",
         "labour_rights"
       ],
-      "license_note": "Unofficial English translation (KLRI). For reference only; neither official nor legally effective."
+      "license_note": "Unofficial English translation (KLRI). For reference only; neither official nor legally effective.",
+      "extractor": "statute",
+      "min_chars": 2000
     },
     {
       "id": "labor_standards_decree_eng",
@@ -74,7 +82,9 @@
         "severance",
         "labour_rights"
       ],
-      "license_note": "Unofficial English translation (KLRI). For reference only; neither official nor legally effective."
+      "license_note": "Unofficial English translation (KLRI). For reference only; neither official nor legally effective.",
+      "extractor": "statute",
+      "min_chars": 2000
     },
     {
       "id": "industrial_accident_decree_eng",
@@ -89,7 +99,9 @@
         "compensation"
       ],
       "license_note": "Unofficial English translation (KLRI). For reference only; neither official nor legally effective.",
-      "_verified": "hseq=67169 serves the Enforcement Decree, not the parent Act (verified 2026-09-01)"
+      "_verified": "hseq=67169 serves the Enforcement Decree, not the parent Act (verified 2026-09-01)",
+      "extractor": "statute",
+      "min_chars": 2000
     },
     {
       "id": "insurance_premiums_act_eng",
@@ -103,7 +115,283 @@
         "premiums",
         "employment_insurance"
       ],
-      "license_note": "Unofficial English translation (KLRI). For reference only; neither official nor legally effective."
+      "license_note": "Unofficial English translation (KLRI). For reference only; neither official nor legally effective.",
+      "extractor": "statute",
+      "min_chars": 2000
+    },
+    {
+      "id": "hikorea_176",
+      "title": "Foreign Resident Registration",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=176&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "alien_registration",
+        "procedure"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
+    },
+    {
+      "id": "hikorea_181",
+      "title": "Extension of Sojourn Period",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=181&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "extension",
+        "stay",
+        "procedure"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
+    },
+    {
+      "id": "hikorea_184",
+      "title": "Change of Status of Stay",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=184&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "status_change",
+        "procedure"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
+    },
+    {
+      "id": "hikorea_187",
+      "title": "Activities Not Covered by Status of Sojourn",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=187&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "status",
+        "procedure"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
+    },
+    {
+      "id": "hikorea_189",
+      "title": "Change/Addition of Workplace",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=189&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "workplace_change",
+        "procedure"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
+    },
+    {
+      "id": "hikorea_191",
+      "title": "Granting Status of Stay",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=191&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "status",
+        "procedure"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
+    },
+    {
+      "id": "hikorea_196",
+      "title": "Obligations to Report",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=196&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "reporting",
+        "obligations"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
+    },
+    {
+      "id": "hikorea_282",
+      "title": "Reporting on Place of Residence",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=282&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "reporting",
+        "residence"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
+    },
+    {
+      "id": "hikorea_7203",
+      "title": "Re-entry Permit (Multiple)",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=7203&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "reentry",
+        "procedure"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
+    },
+    {
+      "id": "hikorea_170",
+      "title": "General Affairs (Foreigners' Stay)",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=170&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "stay",
+        "general"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
+    },
+    {
+      "id": "hikorea_224",
+      "title": "Definition and Investigation of Immigration Offender",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=224&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "stay_violation",
+        "enforcement"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
+    },
+    {
+      "id": "hikorea_225",
+      "title": "Decision on Immigration Offender",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=225&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "stay_violation",
+        "enforcement"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
+    },
+    {
+      "id": "hikorea_146",
+      "title": "Visa Issuance Procedure",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=146&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "visa",
+        "procedure"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
+    },
+    {
+      "id": "hikorea_528",
+      "title": "Work (Visa Categories)",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=528&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "visa",
+        "work"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
+    },
+    {
+      "id": "hikorea_5072",
+      "title": "Stay/Work (Foreign National Koreans)",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=5072&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "stay",
+        "work"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
+    },
+    {
+      "id": "hikorea_5075",
+      "title": "Treatment (Foreign National Koreans)",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=5075&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "treatment"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
+    },
+    {
+      "id": "hikorea_7164",
+      "title": "Laws and Order",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=7164&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "law",
+        "general"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
+    },
+    {
+      "id": "hikorea_272",
+      "title": "Confirmation of Visa Issuance",
+      "url": "https://www.hikorea.go.kr/info/InfoDatail.pt?CAT_SEQ=272&PARENT_ID=11&locale=EN",
+      "lang": "en",
+      "authority": "Korea Immigration Service / HiKorea (hikorea.go.kr)",
+      "doc_type": "procedural_guidance",
+      "topics": [
+        "visa",
+        "procedure"
+      ],
+      "license_note": "Official government guidance (HiKorea, English). Procedural summary - verify current details at an immigration office.",
+      "extractor": "hikorea_info",
+      "min_chars": 400
     }
-  ]
+  ],
+  "_extractors": {
+    "statute": "strip script/style/nav, drop known noise lines",
+    "hikorea_info": "fetch all pages in the group first, then remove lines appearing on EVERY page (shared sidebar nav), keeping only page-unique content"
+  }
 }

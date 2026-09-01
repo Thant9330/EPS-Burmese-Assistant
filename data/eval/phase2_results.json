@@ -4,13 +4,13 @@
   "n_labelable": 20,
   "aggregate": {
     "my": {
-      "hit": 0.8,
-      "mrr": 0.6475,
+      "hit": 0.75,
+      "mrr": 0.5875,
       "prec": 0.41
     },
     "en": {
       "hit": 0.9,
-      "mrr": 0.7350000000000001,
+      "mrr": 0.75,
       "prec": 0.53
     }
   },
@@ -21,11 +21,11 @@
       "n_gold": 7,
       "my": {
         "hit@5": true,
-        "first_rank": 1,
+        "first_rank": 2,
         "prec@5": 0.2,
         "top_sources": [
+          "hikorea_189",
           "eps_act_eng",
-          "labor_standards_decree_eng",
           "labor_standards_decree_eng"
         ]
       },
@@ -35,8 +35,8 @@
         "prec@5": 0.4,
         "top_sources": [
           "eps_act_eng",
-          "eps_act_eng",
-          "eps_decree_eng"
+          "hikorea_189",
+          "eps_act_eng"
         ]
       }
     },
@@ -45,21 +45,21 @@
       "topic": "workplace_change",
       "n_gold": 7,
       "my": {
-        "hit@5": true,
-        "first_rank": 5,
-        "prec@5": 0.2,
+        "hit@5": false,
+        "first_rank": 0,
+        "prec@5": 0.0,
         "top_sources": [
+          "hikorea_189",
           "eps_act_eng",
-          "labor_standards_decree_eng",
-          "eps_act_eng"
+          "labor_standards_decree_eng"
         ]
       },
       "en": {
         "hit@5": true,
-        "first_rank": 1,
+        "first_rank": 2,
         "prec@5": 0.4,
         "top_sources": [
-          "eps_act_eng",
+          "hikorea_189",
           "eps_act_eng",
           "eps_act_eng"
         ]
@@ -268,15 +268,15 @@
     {
       "id": "q11",
       "topic": "alien_registration",
-      "n_gold": 6,
+      "n_gold": 7,
       "my": {
         "hit@5": false,
         "first_rank": 0,
         "prec@5": 0.0,
         "top_sources": [
+          "hikorea_176",
           "immigration_act_eng",
-          "immigration_act_eng",
-          "immigration_act_eng"
+          "hikorea_282"
         ]
       },
       "en": {
@@ -284,7 +284,7 @@
         "first_rank": 0,
         "prec@5": 0.0,
         "top_sources": [
-          "immigration_act_eng",
+          "hikorea_176",
           "immigration_act_eng",
           "immigration_act_eng"
         ]
@@ -293,7 +293,7 @@
     {
       "id": "q12",
       "topic": "reentry",
-      "n_gold": 7,
+      "n_gold": 9,
       "my": {
         "hit@5": false,
         "first_rank": 0,
@@ -305,11 +305,11 @@
         ]
       },
       "en": {
-        "hit@5": false,
-        "first_rank": 0,
-        "prec@5": 0.0,
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.2,
         "top_sources": [
-          "immigration_act_eng",
+          "hikorea_7203",
           "immigration_act_eng",
           "immigration_act_eng"
         ]
@@ -343,7 +343,7 @@
     {
       "id": "q14",
       "topic": "contract_period",
-      "n_gold": 36,
+      "n_gold": 37,
       "my": {
         "hit@5": true,
         "first_rank": 1,
@@ -418,15 +418,15 @@
     {
       "id": "q17",
       "topic": "training",
-      "n_gold": 32,
+      "n_gold": 40,
       "my": {
         "hit@5": true,
         "first_rank": 1,
         "prec@5": 0.6,
         "top_sources": [
+          "hikorea_5075",
           "eps_act_eng",
-          "eps_act_eng",
-          "eps_decree_eng"
+          "hikorea_187"
         ]
       },
       "en": {
@@ -443,15 +443,15 @@
     {
       "id": "q18",
       "topic": "employer_report",
-      "n_gold": 144,
+      "n_gold": 149,
       "my": {
         "hit@5": true,
         "first_rank": 1,
-        "prec@5": 0.6,
+        "prec@5": 0.8,
         "top_sources": [
           "immigration_act_eng",
           "labor_standards_decree_eng",
-          "insurance_premiums_act_eng"
+          "hikorea_189"
         ]
       },
       "en": {
@@ -468,25 +468,25 @@
     {
       "id": "q19",
       "topic": "stay_violation",
-      "n_gold": 12,
+      "n_gold": 18,
       "my": {
         "hit@5": true,
-        "first_rank": 1,
+        "first_rank": 2,
         "prec@5": 0.2,
         "top_sources": [
+          "hikorea_187",
           "immigration_act_eng",
-          "immigration_act_eng",
-          "immigration_act_eng"
+          "hikorea_181"
         ]
       },
       "en": {
-        "hit@5": true,
-        "first_rank": 5,
-        "prec@5": 0.2,
+        "hit@5": false,
+        "first_rank": 0,
+        "prec@5": 0.0,
         "top_sources": [
           "immigration_act_eng",
           "immigration_act_eng",
-          "eps_act_eng"
+          "hikorea_187"
         ]
       }
     },

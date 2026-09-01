@@ -39,3 +39,6 @@ desktop.ini
 .DS_Store
 .vscode/
 .idea/
+
+# embedding cache (large, regenerable)
+data/eval/embcache.npz

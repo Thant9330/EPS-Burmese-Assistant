@@ -1,25 +1,281 @@
 {
   "_comment": "Phase 2 retrieval smoke test. 20 questions an E-9/EPS worker actually asks. 'my' = Burmese (production input), 'en' = human English parallel (upper bound for a translate-then-embed pipeline). Relevance is WEAK-LABELLED: a chunk counts as gold if it contains any gold_terms phrase. This is a proxy, not human judgement - see PHASE2 writeup.",
   "questions": [
-    {"id":"q01","topic":"workplace_change","my":"အလုပ်ခွင် ပြောင်းချင်ရင် ဘယ်လိုအခြေအနေတွေမှာ ခွင့်ပြုပါသလဲ။","en":"Under what circumstances is a foreign worker allowed to change workplace?","gold_terms":["change of business or place of business","change of workplace"]},
-    {"id":"q02","topic":"workplace_change","my":"အလုပ်ခွင် ဘယ်နှစ်ကြိမ် ပြောင်းလို့ရသလဲ။","en":"How many times can a foreign worker change workplace?","gold_terms":["change of business or place of business","shall not exceed three"]},
-    {"id":"q03","topic":"workplace_change","my":"အလုပ်သစ် ရှာဖို့ ဘယ်လောက် အချိန်ရသလဲ။","en":"How long does a worker have to find a new workplace after applying?","gold_terms":["three months from the date of the application","within three months"]},
-    {"id":"q04","topic":"departure_guaranty","my":"ထွက်ခွာချိန် အာမခံ (출국만기보험) ဆိုတာ ဘာလဲ။","en":"What is the departure guaranty insurance that employers must purchase?","gold_terms":["departure guaranty","insurance for departure"]},
-    {"id":"q05","topic":"insurance_premium","my":"အာမခံကြေးကို ဘယ်သူက ပေးဆောင်ရမလဲ။","en":"Who is responsible for paying the insurance premiums?","gold_terms":["premium","insurance premiums"]},
-    {"id":"q06","topic":"minimum_wage","my":"အနည်းဆုံး လုပ်ခလစာ ဘယ်လို သတ်မှတ်သလဲ။","en":"How is the minimum wage determined?","gold_terms":["minimum wage"]},
-    {"id":"q07","topic":"unpaid_wages","my":"လစာ မရသေးရင် ဘယ်လို တိုင်ကြားရမလဲ။","en":"What can a worker do if wages are not paid?","gold_terms":["wages","payment of wages"]},
-    {"id":"q08","topic":"working_hours","my":"တစ်ပတ်ကို အလုပ်ချိန် ဘယ်လောက် လုပ်ရမလဲ။","en":"What are the legal working hours per week?","gold_terms":["working hours","hours of work"]},
-    {"id":"q09","topic":"industrial_accident","my":"အလုပ်ခွင်မှာ ထိခိုက်ဒဏ်ရာ ရရင် ဘာ အကျိုးခံစားခွင့် ရမလဲ။","en":"What benefits are available if a worker is injured at work?","gold_terms":["medical care benefits","industrial accident"]},
-    {"id":"q10","topic":"industrial_accident","my":"အလုပ်ခွင် ထိခိုက်မှု လျော်ကြေး ဘယ်လို တောင်းရမလဲ။","en":"How does a worker claim industrial accident compensation?","gold_terms":["insurance benefits","industrial accident compensation"]},
-    {"id":"q11","topic":"alien_registration","my":"နိုင်ငံခြားသား မှတ်ပုံတင် (외국인등록증) ဘယ်လို လုပ်ရမလဲ။","en":"How does a foreigner complete alien registration?","gold_terms":["alien registration"]},
-    {"id":"q12","topic":"reentry","my":"ကိုရီးယားကနေ ပြန်ထွက်ပြီး ပြန်ဝင်ချင်ရင် ဘာလိုအပ်လဲ။","en":"What is required to re-enter Korea after departing?","gold_terms":["re-entry","reentry permit"]},
-    {"id":"q13","topic":"employment_permit","my":"အလုပ်ရှင်က အလုပ်ခန့်ခွင့် ဘယ်လို ရယူရမလဲ။","en":"How does an employer obtain an employment permit for a foreign worker?","gold_terms":["employment permit"]},
-    {"id":"q14","topic":"contract_period","my":"အလုပ်စာချုပ် သက်တမ်း ဘယ်လောက် ကြာသလဲ။","en":"What is the maximum term of the employment contract?","gold_terms":["employment contract","period of employment"]},
-    {"id":"q15","topic":"severance","my":"အလုပ်ထွက်ရင် ထွက်စာ ငွေ ရမလား။","en":"Is a worker entitled to retirement or severance allowance?","gold_terms":["retirement allowance","severance"]},
-    {"id":"q16","topic":"employment_insurance","my":"အလုပ်အကိုင် အာမခံ ဆိုတာ ဘာလဲ။","en":"What is employment insurance and who must join it?","gold_terms":["employment insurance"]},
-    {"id":"q17","topic":"training","my":"ကိုရီးယား မရောက်ခင် သင်တန်း တက်ရမလား။","en":"Is pre-employment training required for foreign workers?","gold_terms":["training","education"]},
-    {"id":"q18","topic":"employer_report","my":"အလုပ်ရှင်က အပြောင်းအလဲကို ဘယ်မှာ သတင်းပို့ရမလဲ။","en":"Where must an employer report changes in employment?","gold_terms":["report","notify"]},
-    {"id":"q19","topic":"stay_violation","my":"ဗီဇာ သက်တမ်း ကျော်လွန်ရင် ဘာဖြစ်မလဲ။","en":"What happens if a foreigner overstays their permitted period of stay?","gold_terms":["deportation","period of stay"]},
-    {"id":"q20","topic":"prohibited_treatment","my":"အလုပ်ရှင်က ခွဲခြားဆက်ဆံရင် ဥပဒေက ဘာဆိုသလဲ။","en":"What does the law say about discriminatory treatment of foreign workers?","gold_terms":["discriminatory treatment","unfair"]}
-  ]
+    {
+      "id": "q01",
+      "topic": "workplace_change",
+      "my": "အလုပ်ခွင် ပြောင်းချင်ရင် ဘယ်လိုအခြေအနေတွေမှာ ခွင့်ပြုပါသလဲ။",
+      "en": "Under what circumstances is a foreign worker allowed to change workplace?",
+      "gold_terms": [
+        "change of business or place of business",
+        "change of workplace"
+      ],
+      "gold_sources": [
+        "eps_act_eng",
+        "eps_decree_eng",
+        "hikorea_189"
+      ]
+    },
+    {
+      "id": "q02",
+      "topic": "workplace_change",
+      "my": "အလုပ်ခွင် ဘယ်နှစ်ကြိမ် ပြောင်းလို့ရသလဲ။",
+      "en": "How many times can a foreign worker change workplace?",
+      "gold_terms": [
+        "change of business or place of business",
+        "shall not exceed three"
+      ],
+      "gold_sources": [
+        "eps_act_eng",
+        "eps_decree_eng",
+        "hikorea_189"
+      ]
+    },
+    {
+      "id": "q03",
+      "topic": "workplace_change",
+      "my": "အလုပ်သစ် ရှာဖို့ ဘယ်လောက် အချိန်ရသလဲ။",
+      "en": "How long does a worker have to find a new workplace after applying?",
+      "gold_terms": [
+        "three months from the date of the application",
+        "within three months"
+      ],
+      "gold_sources": [
+        "eps_act_eng",
+        "eps_decree_eng",
+        "hikorea_189"
+      ]
+    },
+    {
+      "id": "q04",
+      "topic": "departure_guaranty",
+      "my": "ထွက်ခွာချိန် အာမခံ (출국만기보험) ဆိုတာ ဘာလဲ။",
+      "en": "What is the departure guaranty insurance that employers must purchase?",
+      "gold_terms": [
+        "departure guaranty",
+        "insurance for departure"
+      ],
+      "gold_sources": [
+        "eps_act_eng",
+        "eps_decree_eng"
+      ]
+    },
+    {
+      "id": "q05",
+      "topic": "insurance_premium",
+      "my": "အာမခံကြေးကို ဘယ်သူက ပေးဆောင်ရမလဲ။",
+      "en": "Who is responsible for paying the insurance premiums?",
+      "gold_terms": [
+        "premium",
+        "insurance premiums"
+      ],
+      "gold_sources": [
+        "insurance_premiums_act_eng",
+        "eps_act_eng",
+        "eps_decree_eng"
+      ]
+    },
+    {
+      "id": "q06",
+      "topic": "minimum_wage",
+      "my": "အနည်းဆုံး လုပ်ခလစာ ဘယ်လို သတ်မှတ်သလဲ။",
+      "en": "How is the minimum wage determined?",
+      "gold_terms": [
+        "minimum wage"
+      ],
+      "gold_sources": [
+        "minimum_wage_act_eng"
+      ]
+    },
+    {
+      "id": "q07",
+      "topic": "unpaid_wages",
+      "my": "လစာ မရသေးရင် ဘယ်လို တိုင်ကြားရမလဲ။",
+      "en": "What can a worker do if wages are not paid?",
+      "gold_terms": [
+        "wages",
+        "payment of wages"
+      ],
+      "gold_sources": [
+        "labor_standards_decree_eng",
+        "minimum_wage_act_eng"
+      ]
+    },
+    {
+      "id": "q08",
+      "topic": "working_hours",
+      "my": "တစ်ပတ်ကို အလုပ်ချိန် ဘယ်လောက် လုပ်ရမလဲ။",
+      "en": "What are the legal working hours per week?",
+      "gold_terms": [
+        "working hours",
+        "hours of work"
+      ],
+      "gold_sources": [
+        "labor_standards_decree_eng"
+      ]
+    },
+    {
+      "id": "q09",
+      "topic": "industrial_accident",
+      "my": "အလုပ်ခွင်မှာ ထိခိုက်ဒဏ်ရာ ရရင် ဘာ အကျိုးခံစားခွင့် ရမလဲ။",
+      "en": "What benefits are available if a worker is injured at work?",
+      "gold_terms": [
+        "medical care benefits",
+        "industrial accident"
+      ],
+      "gold_sources": [
+        "industrial_accident_decree_eng"
+      ]
+    },
+    {
+      "id": "q10",
+      "topic": "industrial_accident",
+      "my": "အလုပ်ခွင် ထိခိုက်မှု လျော်ကြေး ဘယ်လို တောင်းရမလဲ။",
+      "en": "How does a worker claim industrial accident compensation?",
+      "gold_terms": [
+        "insurance benefits",
+        "industrial accident compensation"
+      ],
+      "gold_sources": [
+        "industrial_accident_decree_eng"
+      ]
+    },
+    {
+      "id": "q11",
+      "topic": "alien_registration",
+      "my": "နိုင်ငံခြားသား မှတ်ပုံတင် (외국인등록증) ဘယ်လို လုပ်ရမလဲ။",
+      "en": "How does a foreigner complete alien registration?",
+      "gold_terms": [
+        "alien registration"
+      ],
+      "gold_sources": [
+        "hikorea_176",
+        "immigration_act_eng"
+      ]
+    },
+    {
+      "id": "q12",
+      "topic": "reentry",
+      "my": "ကိုရီးယားကနေ ပြန်ထွက်ပြီး ပြန်ဝင်ချင်ရင် ဘာလိုအပ်လဲ။",
+      "en": "What is required to re-enter Korea after departing?",
+      "gold_terms": [
+        "re-entry",
+        "reentry permit"
+      ],
+      "gold_sources": [
+        "hikorea_7203",
+        "immigration_act_eng"
+      ]
+    },
+    {
+      "id": "q13",
+      "topic": "employment_permit",
+      "my": "အလုပ်ရှင်က အလုပ်ခန့်ခွင့် ဘယ်လို ရယူရမလဲ။",
+      "en": "How does an employer obtain an employment permit for a foreign worker?",
+      "gold_terms": [
+        "employment permit"
+      ],
+      "gold_sources": [
+        "eps_act_eng",
+        "eps_decree_eng"
+      ]
+    },
+    {
+      "id": "q14",
+      "topic": "contract_period",
+      "my": "အလုပ်စာချုပ် သက်တမ်း ဘယ်လောက် ကြာသလဲ။",
+      "en": "What is the maximum term of the employment contract?",
+      "gold_terms": [
+        "employment contract",
+        "period of employment"
+      ],
+      "gold_sources": [
+        "eps_act_eng",
+        "eps_decree_eng"
+      ]
+    },
+    {
+      "id": "q15",
+      "topic": "severance",
+      "my": "အလုပ်ထွက်ရင် ထွက်စာ ငွေ ရမလား။",
+      "en": "Is a worker entitled to retirement or severance allowance?",
+      "gold_terms": [
+        "retirement allowance",
+        "severance"
+      ],
+      "gold_sources": [
+        "labor_standards_decree_eng"
+      ]
+    },
+    {
+      "id": "q16",
+      "topic": "employment_insurance",
+      "my": "အလုပ်အကိုင် အာမခံ ဆိုတာ ဘာလဲ။",
+      "en": "What is employment insurance and who must join it?",
+      "gold_terms": [
+        "employment insurance"
+      ],
+      "gold_sources": [
+        "insurance_premiums_act_eng"
+      ]
+    },
+    {
+      "id": "q17",
+      "topic": "training",
+      "my": "ကိုရီးယား မရောက်ခင် သင်တန်း တက်ရမလား။",
+      "en": "Is pre-employment training required for foreign workers?",
+      "gold_terms": [
+        "training",
+        "education"
+      ],
+      "gold_sources": [
+        "eps_act_eng",
+        "eps_decree_eng"
+      ]
+    },
+    {
+      "id": "q18",
+      "topic": "employer_report",
+      "my": "အလုပ်ရှင်က အပြောင်းအလဲကို ဘယ်မှာ သတင်းပို့ရမလဲ။",
+      "en": "Where must an employer report changes in employment?",
+      "gold_terms": [
+        "report",
+        "notify"
+      ],
+      "gold_sources": [
+        "hikorea_196",
+        "hikorea_282",
+        "eps_act_eng"
+      ]
+    },
+    {
+      "id": "q19",
+      "topic": "stay_violation",
+      "my": "ဗီဇာ သက်တမ်း ကျော်လွန်ရင် ဘာဖြစ်မလဲ။",
+      "en": "What happens if a foreigner overstays their permitted period of stay?",
+      "gold_terms": [
+        "deportation",
+        "period of stay"
+      ],
+      "gold_sources": [
+        "immigration_act_eng",
+        "hikorea_224",
+        "hikorea_225"
+      ]
+    },
+    {
+      "id": "q20",
+      "topic": "prohibited_treatment",
+      "my": "အလုပ်ရှင်က ခွဲခြားဆက်ဆံရင် ဥပဒေက ဘာဆိုသလဲ။",
+      "en": "What does the law say about discriminatory treatment of foreign workers?",
+      "gold_terms": [
+        "discriminatory treatment",
+        "unfair"
+      ],
+      "gold_sources": [
+        "eps_act_eng"
+      ]
+    }
+  ],
+  "_labelling": "gold_sources (which DOCUMENT should answer this) is the primary label. gold_terms proved unreliable once HiKorea entered the corpus - it says 'Foreigner Registration' where the statutes say 'alien registration', so correct rank-1 retrievals scored as misses."
 }

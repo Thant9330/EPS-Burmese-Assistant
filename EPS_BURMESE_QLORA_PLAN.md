@@ -119,6 +119,20 @@ corpus gap with eps.go.kr / hikorea.go.kr procedural content is the highest-valu
 Caveat: n=20 with weak keyword labels. On the 7 most discriminating questions the gap is
 wider than the headline (Burmese 3/7 vs English 5/7).
 
+### Phase 2b — Corpus gap closed ✅ DONE (2026-09-01)
+
+Corpus **402 → 432 chunks, 7 → 24 documents**: added 17 HiKorea procedural pages covering the
+operational detail statutes omit. Details: [`PHASE2B_CORPUS_GAP.md`](PHASE2B_CORPUS_GAP.md).
+
+The pages added now rank **#1** for the questions that previously failed (`hikorea_176` for
+alien registration, `hikorea_189` for workplace change, `hikorea_7203` for re-entry).
+
+**Important finding: the eval, not retrieval, was the weak link.** Re-running unchanged showed a
+false regression because `gold_terms` said "alien registration" while HiKorea writes "Foreigner
+Registration" — a correct rank-1 hit scored as a miss. Keyword labels are too strict,
+whole-document labels too loose (167/432 chunks gold on one question). Chunk-level relevance
+needs human judgement; that is Phase 6 work, and no hit@5 figure should be quoted until then.
+
 ### Phase 3 — Dataset (~800–1500 pairs) ← 80% of the real work
 Format: `{context: [English chunks], question: Burmese, answer: Burmese}`
 

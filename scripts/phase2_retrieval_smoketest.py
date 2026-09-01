@@ -20,6 +20,8 @@ import json
 import sys
 from pathlib import Path
 
+import hashlib
+
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
@@ -29,6 +31,7 @@ ROOT = Path(__file__).resolve().parent.parent
 CORPUS = ROOT / "data" / "processed" / "corpus.jsonl"
 QUESTIONS = ROOT / "data" / "eval" / "phase2_questions.json"
 OUT = ROOT / "data" / "eval" / "phase2_results.json"
+CACHE = ROOT / "data" / "eval" / "embcache.npz"   # gitignored; makes re-runs cheap
 MODEL = "BAAI/bge-m3"
 K = 5
 
@@ -44,12 +47,29 @@ def main():
     qs = json.loads(QUESTIONS.read_text(encoding="utf-8"))["questions"]
     print(f"corpus: {len(chunks)} chunks | questions: {len(qs)}")
 
-    print(f"loading {MODEL} (first run downloads ~2.3GB) ...", flush=True)
+    print(f"loading {MODEL} ...", flush=True)
     model = SentenceTransformer(MODEL)
 
-    print("embedding corpus ...", flush=True)
-    C = model.encode([c["text"] for c in chunks], batch_size=8,
-                     normalize_embeddings=True, show_progress_bar=False)
+    # Encoding 400+ chunks on CPU takes ~35 min, so cache by text hash. Only
+    # genuinely new chunks are encoded on a re-run.
+    cache = {}
+    if CACHE.exists():
+        z = np.load(CACHE, allow_pickle=False)
+        cache = {k: z[k] for k in z.files}
+        print(f"embedding cache: {len(cache)} vectors loaded", flush=True)
+
+    texts = [c["text"] for c in chunks]
+    keys = [hashlib.sha1(x.encode("utf-8")).hexdigest() for x in texts]
+    todo = [(k, x) for k, x in zip(keys, texts) if k not in cache]
+    print(f"embedding corpus: {len(todo)} new / {len(texts)} total ...", flush=True)
+    if todo:
+        vecs = model.encode([x for _, x in todo], batch_size=8,
+                            normalize_embeddings=True, show_progress_bar=False)
+        for (k, _), v in zip(todo, vecs):
+            cache[k] = v
+        np.savez(CACHE, **cache)
+        print(f"  cache saved ({len(cache)} vectors)", flush=True)
+    C = np.stack([cache[k] for k in keys])
 
     print("embedding queries ...", flush=True)
     Qmy = model.encode([q["my"] for q in qs], normalize_embeddings=True)
