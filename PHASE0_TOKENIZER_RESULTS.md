@@ -70,3 +70,38 @@ drives inference cost and generation quality.
   but do not treat 3.32x as precise.
 - 9B > 8B. Still fits 4-bit on T4, but it is tighter than the 7B originally planned.
 - Unsloth support for Gemma 2 should be confirmed before Phase 5.
+
+---
+
+# Addendum — Base model re-check (2026-09-01)
+
+Phase 0 locked SEA-LION v3 / Gemma 2. Before committing to a training spike, newer SEA-LION
+releases were measured with the same parallel-corpus method.
+
+| Model | Params | Vocab | MY/EN | Arch | T4 |
+|---|---|---:|---:|---|---|
+| **aisingapore/Gemma-SEA-LION-v4.5-E2B-IT** | ~2B eff (35L / 1536h) | 262,144 | **1.85x** | `gemma4` | easy |
+| aisingapore/Apertus-SEA-LION-v4-8B-IT | 8B (32L / 4096h) | 131,072 | 2.47x | `apertus` | 4-bit |
+| aisingapore/Gemma-SEA-LION-v3-9B-IT *(current)* | 9B (42L / 3584h) | 256,000 | 3.32x | `gemma2` | tight |
+| aisingapore/Gemma-SEA-LION-v4-27B-IT | 27B | 262,145 | 1.85x | `gemma4` | too big |
+| aisingapore/Llama-SEA-LION-v3-8B-IT | 8B | 128,256 | 7.79x | `llama` | — |
+
+**The Gemma 4 tokenizer nearly halves Burmese cost: 1.85x vs Gemma 2's 3.32x** — ~44% fewer
+tokens per Burmese answer, which lands directly on training cost, inference cost, and quality.
+Korean official terms also improve (22 vs 26 tokens).
+
+Two incidental findings:
+- `aisingapore/Gemma-SEA-LION-v3-9B-IT` is the same model as
+  `aisingapore/gemma2-9b-cpt-sea-lionv3-instruct` under a renamed repo — identical vocab and
+  identical counts.
+- All Gemma 4 variants (E2B, 4B-VL, 27B) share one tokenizer, so corpus chunking stays valid
+  across that whole family. English tokenizes near-identically to Gemma 2 (87 tokens either
+  way), so re-chunking the English corpus is low-impact.
+
+**Apertus is a non-standard architecture** (`model_type=apertus`), so Unsloth support is
+doubtful. Its 2.47x does not justify that risk over the E2B's 1.85x.
+
+Open trade-off: E2B has the best tokenizer and trains ~4x faster on a free T4, but is ~2B
+parameters and will generate weaker prose than 9B. Because the Phase 3 dataset is plain text
+and therefore tokenizer-agnostic, a base-model switch later costs only a re-chunk and a
+re-spike — the expensive asset survives.
