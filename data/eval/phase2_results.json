@@ -1,0 +1,519 @@
+{
+  "model": "BAAI/bge-m3",
+  "k": 5,
+  "n_labelable": 20,
+  "aggregate": {
+    "my": {
+      "hit": 0.8,
+      "mrr": 0.6475,
+      "prec": 0.41
+    },
+    "en": {
+      "hit": 0.9,
+      "mrr": 0.7350000000000001,
+      "prec": 0.53
+    }
+  },
+  "per_question": [
+    {
+      "id": "q01",
+      "topic": "workplace_change",
+      "n_gold": 7,
+      "my": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.2,
+        "top_sources": [
+          "eps_act_eng",
+          "labor_standards_decree_eng",
+          "labor_standards_decree_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.4,
+        "top_sources": [
+          "eps_act_eng",
+          "eps_act_eng",
+          "eps_decree_eng"
+        ]
+      }
+    },
+    {
+      "id": "q02",
+      "topic": "workplace_change",
+      "n_gold": 7,
+      "my": {
+        "hit@5": true,
+        "first_rank": 5,
+        "prec@5": 0.2,
+        "top_sources": [
+          "eps_act_eng",
+          "labor_standards_decree_eng",
+          "eps_act_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.4,
+        "top_sources": [
+          "eps_act_eng",
+          "eps_act_eng",
+          "eps_act_eng"
+        ]
+      }
+    },
+    {
+      "id": "q03",
+      "topic": "workplace_change",
+      "n_gold": 5,
+      "my": {
+        "hit@5": false,
+        "first_rank": 0,
+        "prec@5": 0.0,
+        "top_sources": [
+          "eps_act_eng",
+          "eps_act_eng",
+          "eps_act_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 3,
+        "prec@5": 0.2,
+        "top_sources": [
+          "eps_act_eng",
+          "eps_act_eng",
+          "eps_act_eng"
+        ]
+      }
+    },
+    {
+      "id": "q04",
+      "topic": "departure_guaranty",
+      "n_gold": 12,
+      "my": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.8,
+        "top_sources": [
+          "eps_decree_eng",
+          "eps_decree_eng",
+          "eps_act_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.6,
+        "top_sources": [
+          "eps_decree_eng",
+          "eps_decree_eng",
+          "eps_act_eng"
+        ]
+      }
+    },
+    {
+      "id": "q05",
+      "topic": "insurance_premium",
+      "n_gold": 110,
+      "my": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.6,
+        "top_sources": [
+          "eps_decree_eng",
+          "eps_decree_eng",
+          "immigration_act_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 1.0,
+        "top_sources": [
+          "insurance_premiums_act_eng",
+          "insurance_premiums_act_eng",
+          "insurance_premiums_act_eng"
+        ]
+      }
+    },
+    {
+      "id": "q06",
+      "topic": "minimum_wage",
+      "n_gold": 18,
+      "my": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.8,
+        "top_sources": [
+          "minimum_wage_act_eng",
+          "minimum_wage_act_eng",
+          "minimum_wage_act_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 1.0,
+        "top_sources": [
+          "minimum_wage_act_eng",
+          "minimum_wage_act_eng",
+          "minimum_wage_act_eng"
+        ]
+      }
+    },
+    {
+      "id": "q07",
+      "topic": "unpaid_wages",
+      "n_gold": 48,
+      "my": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.8,
+        "top_sources": [
+          "labor_standards_decree_eng",
+          "labor_standards_decree_eng",
+          "labor_standards_decree_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 1.0,
+        "top_sources": [
+          "labor_standards_decree_eng",
+          "labor_standards_decree_eng",
+          "minimum_wage_act_eng"
+        ]
+      }
+    },
+    {
+      "id": "q08",
+      "topic": "working_hours",
+      "n_gold": 19,
+      "my": {
+        "hit@5": true,
+        "first_rank": 2,
+        "prec@5": 0.6,
+        "top_sources": [
+          "industrial_accident_decree_eng",
+          "labor_standards_decree_eng",
+          "labor_standards_decree_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.2,
+        "top_sources": [
+          "labor_standards_decree_eng",
+          "labor_standards_decree_eng",
+          "labor_standards_decree_eng"
+        ]
+      }
+    },
+    {
+      "id": "q09",
+      "topic": "industrial_accident",
+      "n_gold": 85,
+      "my": {
+        "hit@5": true,
+        "first_rank": 4,
+        "prec@5": 0.4,
+        "top_sources": [
+          "industrial_accident_decree_eng",
+          "industrial_accident_decree_eng",
+          "industrial_accident_decree_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 2,
+        "prec@5": 0.4,
+        "top_sources": [
+          "industrial_accident_decree_eng",
+          "industrial_accident_decree_eng",
+          "industrial_accident_decree_eng"
+        ]
+      }
+    },
+    {
+      "id": "q10",
+      "topic": "industrial_accident",
+      "n_gold": 80,
+      "my": {
+        "hit@5": true,
+        "first_rank": 2,
+        "prec@5": 0.2,
+        "top_sources": [
+          "industrial_accident_decree_eng",
+          "industrial_accident_decree_eng",
+          "industrial_accident_decree_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.8,
+        "top_sources": [
+          "insurance_premiums_act_eng",
+          "insurance_premiums_act_eng",
+          "insurance_premiums_act_eng"
+        ]
+      }
+    },
+    {
+      "id": "q11",
+      "topic": "alien_registration",
+      "n_gold": 6,
+      "my": {
+        "hit@5": false,
+        "first_rank": 0,
+        "prec@5": 0.0,
+        "top_sources": [
+          "immigration_act_eng",
+          "immigration_act_eng",
+          "immigration_act_eng"
+        ]
+      },
+      "en": {
+        "hit@5": false,
+        "first_rank": 0,
+        "prec@5": 0.0,
+        "top_sources": [
+          "immigration_act_eng",
+          "immigration_act_eng",
+          "immigration_act_eng"
+        ]
+      }
+    },
+    {
+      "id": "q12",
+      "topic": "reentry",
+      "n_gold": 7,
+      "my": {
+        "hit@5": false,
+        "first_rank": 0,
+        "prec@5": 0.0,
+        "top_sources": [
+          "immigration_act_eng",
+          "immigration_act_eng",
+          "immigration_act_eng"
+        ]
+      },
+      "en": {
+        "hit@5": false,
+        "first_rank": 0,
+        "prec@5": 0.0,
+        "top_sources": [
+          "immigration_act_eng",
+          "immigration_act_eng",
+          "immigration_act_eng"
+        ]
+      }
+    },
+    {
+      "id": "q13",
+      "topic": "employment_permit",
+      "n_gold": 23,
+      "my": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.4,
+        "top_sources": [
+          "eps_act_eng",
+          "eps_act_eng",
+          "labor_standards_decree_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.8,
+        "top_sources": [
+          "eps_decree_eng",
+          "eps_act_eng",
+          "eps_act_eng"
+        ]
+      }
+    },
+    {
+      "id": "q14",
+      "topic": "contract_period",
+      "n_gold": 36,
+      "my": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.6,
+        "top_sources": [
+          "labor_standards_decree_eng",
+          "labor_standards_decree_eng",
+          "eps_act_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.8,
+        "top_sources": [
+          "labor_standards_decree_eng",
+          "eps_decree_eng",
+          "eps_act_eng"
+        ]
+      }
+    },
+    {
+      "id": "q15",
+      "topic": "severance",
+      "n_gold": 3,
+      "my": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.4,
+        "top_sources": [
+          "eps_decree_eng",
+          "labor_standards_decree_eng",
+          "industrial_accident_decree_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 3,
+        "prec@5": 0.2,
+        "top_sources": [
+          "labor_standards_decree_eng",
+          "industrial_accident_decree_eng",
+          "eps_decree_eng"
+        ]
+      }
+    },
+    {
+      "id": "q16",
+      "topic": "employment_insurance",
+      "n_gold": 56,
+      "my": {
+        "hit@5": true,
+        "first_rank": 2,
+        "prec@5": 0.8,
+        "top_sources": [
+          "eps_decree_eng",
+          "insurance_premiums_act_eng",
+          "insurance_premiums_act_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 1.0,
+        "top_sources": [
+          "insurance_premiums_act_eng",
+          "insurance_premiums_act_eng",
+          "insurance_premiums_act_eng"
+        ]
+      }
+    },
+    {
+      "id": "q17",
+      "topic": "training",
+      "n_gold": 32,
+      "my": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.6,
+        "top_sources": [
+          "eps_act_eng",
+          "eps_act_eng",
+          "eps_decree_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.6,
+        "top_sources": [
+          "eps_act_eng",
+          "eps_act_eng",
+          "eps_decree_eng"
+        ]
+      }
+    },
+    {
+      "id": "q18",
+      "topic": "employer_report",
+      "n_gold": 144,
+      "my": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.6,
+        "top_sources": [
+          "immigration_act_eng",
+          "labor_standards_decree_eng",
+          "insurance_premiums_act_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.8,
+        "top_sources": [
+          "insurance_premiums_act_eng",
+          "insurance_premiums_act_eng",
+          "insurance_premiums_act_eng"
+        ]
+      }
+    },
+    {
+      "id": "q19",
+      "topic": "stay_violation",
+      "n_gold": 12,
+      "my": {
+        "hit@5": true,
+        "first_rank": 1,
+        "prec@5": 0.2,
+        "top_sources": [
+          "immigration_act_eng",
+          "immigration_act_eng",
+          "immigration_act_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 5,
+        "prec@5": 0.2,
+        "top_sources": [
+          "immigration_act_eng",
+          "immigration_act_eng",
+          "eps_act_eng"
+        ]
+      }
+    },
+    {
+      "id": "q20",
+      "topic": "prohibited_treatment",
+      "n_gold": 3,
+      "my": {
+        "hit@5": false,
+        "first_rank": 0,
+        "prec@5": 0.0,
+        "top_sources": [
+          "insurance_premiums_act_eng",
+          "labor_standards_decree_eng",
+          "industrial_accident_decree_eng"
+        ]
+      },
+      "en": {
+        "hit@5": true,
+        "first_rank": 3,
+        "prec@5": 0.2,
+        "top_sources": [
+          "eps_decree_eng",
+          "eps_act_eng",
+          "eps_act_eng"
+        ]
+      }
+    }
+  ]
+}

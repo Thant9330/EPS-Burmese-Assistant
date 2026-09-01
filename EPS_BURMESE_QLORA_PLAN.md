@@ -93,12 +93,31 @@ being the most-asked E-9 question — statutes carry the principle, but the oper
 lives in MOEL notices and eps.go.kr guidance that are not yet ingested. Korean-language
 originals are also still missing (law.go.kr Korean pages are JS-rendered).
 
-### Phase 2 — Retrieval smoke test (directly tests the embedding fear)
-Write 20 real Burmese questions. Compare recall@5 under two strategies:
-- **A:** embed Burmese query directly with BGE-M3 → English chunks
-- **B:** translate query to English first → embed → English chunks
+### Phase 2 — Retrieval smoke test ✅ DONE (2026-09-01)
 
-Pick whichever wins. Expect B, but **measure it** — this converts your worry into a number.
+20 real E-9 questions, BGE-M3, k=5, against the 402-chunk Phase 1 corpus. Full results:
+[`PHASE2_RETRIEVAL_RESULTS.md`](PHASE2_RETRIEVAL_RESULTS.md); script:
+`scripts/phase2_retrieval_smoketest.py`; eval set: `data/eval/phase2_questions.json`.
+
+| Condition | hit@5 | MRR |
+|---|---:|---:|
+| A) Burmese query -> EN corpus | 80.0% | 0.647 |
+| B) human-English query -> EN corpus (ceiling) | 90.0% | 0.735 |
+
+**BGE-M3 handles Burmese cross-lingually — the embedding worry was largely unfounded.**
+Condition B used *human* translation, so it is an unreachable ceiling; real MT would score
+below it, making the true benefit of an MT stage less than 10 points.
+
+**Decision: no translation step for now.** Not worth the extra model, latency, and failure
+mode. Revisit with dual-query (embed both languages, union the hits) if Phase 6 shows
+retrieval is the binding constraint.
+
+**The actual bottleneck is corpus coverage, not language.** Two questions (alien registration,
+re-entry) missed in *both* languages — translating would not have helped. Closing the Phase 1
+corpus gap with eps.go.kr / hikorea.go.kr procedural content is the highest-value next work.
+
+Caveat: n=20 with weak keyword labels. On the 7 most discriminating questions the gap is
+wider than the headline (Burmese 3/7 vs English 5/7).
 
 ### Phase 3 — Dataset (~800–1500 pairs) ← 80% of the real work
 Format: `{context: [English chunks], question: Burmese, answer: Burmese}`
