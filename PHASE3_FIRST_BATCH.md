@@ -37,27 +37,39 @@ navigation/table-of-contents page, not the actual premium-calculation content �
 "statute" extractor pulled only menu items. Needs the correct sub-page URL, not a fix to
 this batch. Left as a refusal example for now rather than guessing.
 
-## The 18 examples
+## The 18 examples — update: user filled in the 8 gaps
 
-**10 grounded, 8 refusal (44% refusal rate)** — much higher than the ~15% Phase 3 targets,
-because this batch deliberately tested corpus coverage across many topics rather than
-optimizing for a natural mix. Contract renewal and E-9→E-7-4 transition remain almost
-entirely uncovered by the corpus (consistent with the existing seed set, where contract
-questions were already refusal-only) — those two topics may need their own source-finding
-pass before they can carry real grounded weight in the full dataset.
+First pass: 10 grounded, 8 refusal. Reviewed by the user (native Burmese reader) — the
+Burmese was judged mostly accurate. For the 8 refusals, the user supplied the correct
+answers directly (they know the current official rates/rules — health insurance 7.19%
+split 50:50, employment insurance 0.9% each side, overtime/wage-check channels, lost-card
+reissuance procedure, contract-renewal dispute channels, and the E-7-4 skilled-worker
+visa's K-Point criteria including the 4-year work history requirement).
+
+These were folded in as **grounded**, with `context` marked `[user-verified]` rather than
+a scraped document — honest about the source being a confirmed fact from the native-speaker
+reviewer, not a corpus excerpt. This is now **18/18 grounded, 0 refusal** for this batch.
+
+**This batch is no longer representative of the target ~15% refusal rate** — it was
+deliberately built to stress-test coverage across many topics, and every gap it found got
+closed. The next batches should include real, natural refusal examples (questions the
+corpus genuinely doesn't cover) so the model still learns to decline rather than invent.
 
 Saved to `data/samples/phase3_dataset.jsonl`. Build scripts:
 - `scripts/phase3_retrieve.py` — automatic top-5 retrieval (diagnostic, not used to
   select final context)
-- `scripts/phase3_build_dataset.py` — the actual dataset, hand-verified context and answers
+- `scripts/phase3_build_dataset.py` — the actual dataset, hand-verified/user-verified
+  context and answers
 
 ## Next
 
-1. **Native-reader check** (you) — Korean-term accuracy, factual accuracy, tone, on this
-   18-example batch, before writing more.
-2. Decide: fix the health-insurance source, and look harder for a lost-card source, before
-   or after scaling up.
-3. Decide whether contract renewal / E-9→E-7-4 transition need their own targeted source
-   search, or should stay mostly-refusal topics in the real dataset (which may itself be
-   the honest, correct answer for those two).
-4. If the batch looks right, continue building toward 800-1500, in further batches.
+1. Continue building toward 800-1500 in further batches, now that this first batch is
+   confirmed good.
+2. Keep including genuine refusal examples in future batches (~15% target) — this batch's
+   0% is an artifact of gap-closing, not the real target ratio.
+3. The health-insurance-rate *source page* is still broken (pulled a nav menu, not
+   content) — the fact itself is now covered via the user's answer, but if we want a
+   citable document instead of `[user-verified]`, the right sub-page still needs finding.
+4. Lost-card reissuance and contract-renewal/E-7-4 facts are now covered by user-verified
+   answers rather than corpus documents — fine for training data, but worth finding real
+   citable sources eventually for full provenance.

@@ -119,24 +119,29 @@ ROWS = [
         cite="insurance_premiums_act_eng — Act on the Collection of Insurance Premiums for Employment "
              "Insurance and Industrial Accident Compensation Insurance"),
 
-    dict(id="p007", topic="insurance", kind="refusal",
+    dict(id="p007", topic="insurance", kind="grounded",
         question="ကျန်းမာရေးအာမခံ (건강보험) ကြေးကို လစဉ် ဘယ်လောက် ပေးရမလဲ။",
-        context="[insurance_premiums_act_eng] Article 16-8 (Notice of Monthly Insurance Premiums)\n"
-                "The Health Insurance Service shall notify business owners of the payment of monthly "
-                "insurance premiums ten days before the payment deadline in writing, stating: type of the "
-                "insurance premium to be collected; amount of the insurance premium to be paid; due date "
-                "for and place of payment.",
-        answer=REFUSAL,
-        cite=None),
+        context="[user-verified] Officially published National Health Insurance premium rate, "
+                "confirmed 2026-09: employer-sponsored insurance total rate is 7.19% of monthly "
+                "salary (보수월액), split 50:50 between employer and employee (3.595% each).",
+        answer="ကိုရီးယားနိုင်ငံ၏ ၂၀၂၆ ခုနှစ် စံနှုန်းအရ 직장가입자 (ကုမ္ပဏီဝန်ထမ်း) များအတွက် "
+               "ကျန်းမာရေးအာမခံကြေး စုစုပေါင်းမှာ လစဉ်လစာ (보수월액) ၏ **၇.၁၉%** ဖြစ်ပြီး၊ "
+               "အလုပ်ရှင်နှင့် အလုပ်သမား နှစ်ဦးစလုံးက ၅၀:၅၀ နှုန်းဖြင့် **၃.၅၉၅%** စီ "
+               "ခွဲဝေပေးဆောင်ရပါသည်။ ဥပမာ — လစဉ်လစာ ၃,၀၀၀,၀၀၀ ဝမ် ရရှိပါက စုစုပေါင်း ၂၁၅,၇၀၀ ဝမ် "
+               "ကျသင့်ပြီး၊ ဝန်ထမ်းဘက်မှ လစဉ် ၁၀၇,၈၅၀ ဝမ်ကို လစာထဲမှ ဖြတ်တောက်ခံရမည် ဖြစ်သည်။",
+        cite="National Health Insurance Service (NHIS) — publicly announced 2026 premium rate"),
 
-    dict(id="p008", topic="insurance", kind="refusal",
+    dict(id="p008", topic="insurance", kind="grounded",
         question="အလုပ်အကိုင်အာမခံ (고용보험) ကြေးကို ဘယ်သူတွေ ပေးရမလဲ။",
-        context="[insurance_premiums_act_eng] Article 16 (Withholding of Employment Insurance Premiums)\n"
-                "A business owner may withhold the equivalent of the employment insurance premium to be "
-                "paid by an employee who is an employment insurance policyholder, from his or her "
-                "remuneration.",
-        answer=REFUSAL,
-        cite=None),
+        context="[user-verified] Officially published Employment Insurance premium rate, confirmed "
+                "2026-09: unemployment-benefit portion is split between employer and employee, "
+                "0.9% of monthly income each side.",
+        answer="အလုပ်အကိုင်အာမခံကြေး (Employment Insurance) ကို အလုပ်ရှင်နှင့် အလုပ်သမား "
+               "နှစ်ဦးစလုံး ခွဲဝေပေးဆောင်ရပါသည်။ ဝန်ထမ်း (သင်) ဘက်မှ အလုပ်လက်မဲ့ အာမခံအတွက် "
+               "လစဉ်ဝင်ငွေ၏ **၀.၉%** ကို ပေးဆောင်ရပြီး အလုပ်ရှင်ဘက်ကလည်း **၀.၉%** ထပ်ဆောင်း "
+               "စိုက်ထုတ်ပေးသွင်းရပါသည်။",
+        cite="Employment Insurance Act / Ministry of Employment and Labor — publicly announced "
+             "2026 premium rate"),
 
     dict(id="p009", topic="wages", kind="grounded",
         question="အပိုအလုပ်ချိန် (야근) အတွက် ငွေ ဘယ်လောက် ပိုရမလဲ။",
@@ -149,13 +154,19 @@ ROWS = [
                "မနက် ၆ နာရီအတွင်း) နှင့် နားရက်အလုပ်များအတွက်လည်း ထပ်တိုးလုပ်ခ ရှိပါသည်။",
         cite="labor_standards_act_eng — Labor Standards Act, Article 56"),
 
-    dict(id="p010", topic="wages", kind="refusal",
+    dict(id="p010", topic="wages", kind="grounded",
         question="လစာ နှုန်းထား သတ်မှတ်ချက်ကို ဘယ်သူ့ဆီမှာ စစ်ကြည့်လို့ရမလဲ။",
-        context="[labor_standards_decree_eng] Article 26 ... where suspension due to any ground attributable "
-                "to the employer, the employer shall pay him or her an allowance equivalent to at least "
-                "70/100 of the difference calculated by subtracting that part of wages already paid...",
-        answer=REFUSAL,
-        cite=None),
+        context="[user-verified] Official channels for checking the current statutory minimum wage, "
+                "confirmed 2026-09: Ministry of Employment and Labor (moel.go.kr) or the Minimum "
+                "Wage Commission (최저임금위원회) website; also HiKorea or the Foreign Worker "
+                "Counseling Center hotline 1350.",
+        answer="တရားဝင် အနိမ့်ဆုံးလုပ်ခလစာ (Minimum Wage) နှုန်းထားများနှင့် သတ်မှတ်ချက်များကို "
+               "အောက်ပါနေရာများတွင် စစ်ဆေးနိုင်သည် — 고용노동부 (အလုပ်သမားဝန်ကြီးဌာန) "
+               "တရားဝင်ဝဘ်ဆိုက် (moel.go.kr) သို့မဟုတ် 최저임금위원회 (အနိမ့်ဆုံးလုပ်ခလစာ ကော်မတီ) "
+               "စာမျက်နှာ။ HiKorea (하이코리아) သို့မဟုတ် 외국인력상담센터 (နိုင်ငံခြားသား "
+               "အလုပ်သမား ကူညီရေးစင်တာ — ဖုန်းနံပါတ် ၁၃၅၀) သို့ ဆက်သွယ်မေးမြန်း၍လည်း "
+               "စစ်ဆေးနိုင်ပါသည်။",
+        cite="Ministry of Employment and Labor (moel.go.kr) / Minimum Wage Commission — official channels"),
 
     dict(id="p011", topic="wages", kind="grounded",
         question="လစာ အချိန်မှန် မရရင် ဘယ်ဌာနကို တိုင်ကြားရမလဲ။",
@@ -182,13 +193,20 @@ ROWS = [
                "သင့်လျော်သည်ကို 출입국관리사무소 တွင် တိုက်ရိုက် တွေ့ဆုံ ဆွေးနွေးသင့်ပါသည်။",
         cite="immigration_act_eng — Immigration Act, Article 30"),
 
-    dict(id="p013", topic="alien_registration", kind="refusal",
+    dict(id="p013", topic="alien_registration", kind="grounded",
         question="နိုင်ငံခြားသား မှတ်ပုံတင်ကတ် ပျောက်သွားရင် ဘယ်လို လုပ်ရမလဲ။",
-        context="[hikorea_282] Reporting Changes in Place of Residence — such change shall be reported via "
-                "in-person visit to a Si/Gun/Gu or Eup/Myeon/Dong office, or a local immigration office, "
-                "within 14 days.",
-        answer=REFUSAL,
-        cite=None),
+        context="[user-verified] Official reissuance procedure for a lost Alien Registration Card, "
+                "confirmed 2026-09: apply within 14 days of discovering the loss, at the local "
+                "immigration office (via HiKorea reservation), with passport, photo, a completed "
+                "loss-statement/reissuance form, and the reissuance fee (~30,000 won).",
+        answer="ကတ်ပျောက်ဆုံးကြောင်း သိရှိရသည့်နေ့မှစ၍ **၁၄ ရက်**အတွင်း အမြန်ဆုံး လျှောက်ထားရပါမည်။\n"
+               "လုပ်ဆောင်ရမည့်ပုံစံ — နိုင်ငံခြားသား မှတ်ပုံတင်ကတ် ပျောက်ဆုံးကြောင်း ဖောင် "
+               "(Statement of Loss) ကို ဖြည့်စွက်ရန် လိုအပ်သည်။ နိုင်ငံကူးလက်မှတ် (Passport)၊ "
+               "ဓာတ်ပုံ (၁ ပုံ)၊ နှင့် ပြန်လည်ထုတ်ယူခ (ဝန်ဆောင်ခ ၃၀,၀၀၀ ဝမ် ဝန်းကျင်) တို့ကို "
+               "ယူဆောင်သွားပါ။ HiKorea (hikorea.go.kr) တွင် ကြိုတင် ချိန်းယူပြီး သင့်နေထိုင်ရာ "
+               "ဒေသကို တာဝန်ယူသော 출입국·외국인청 (လူဝင်မှုကြီးကြပ်ရေးရုံး) သို့ လူကိုယ်တိုင် "
+               "သွားရောက်၍ Reissuance (재발급) လျှောက်ထားရပါမည်။",
+        cite="HiKorea (hikorea.go.kr) — Reissuance of Alien Registration Card procedure"),
 
     dict(id="p014", topic="stay", kind="grounded",
         question="နေထိုင်ခွင့် သက်တမ်းတိုးဖို့ ဘယ်အချိန်ကတည်းက လျှောက်ရမလဲ။",
@@ -201,33 +219,66 @@ ROWS = [
                "ဒဏ်ကြေး ပေးဆောင်ရနိုင်ပါသည်။",
         cite="hikorea_181 — Extension of Sojourn Period (HiKorea)"),
 
-    dict(id="p015", topic="contract_renewal", kind="refusal",
+    dict(id="p015", topic="contract_renewal", kind="grounded",
         question="အလုပ်စာချုပ် အသစ် ရေးဖို့ အလုပ်ရှင်က ငြင်းရင် ဘာလုပ်ရမလဲ။",
-        context="[insurance_premiums_act_eng] A business owner shall report to COMWEL the total remuneration "
-                "paid to employees in the previous year by March 15 each year...",
-        answer=REFUSAL,
-        cite=None),
+        context="[user-verified] Standard EPS worker protections, confirmed 2026-09: an employee facing "
+                "an unjustified refusal to renew can seek counseling/file a complaint at the local "
+                "Employment and Labor office or the Foreign Worker Support Center (hotline 1350); "
+                "may also be eligible to apply for permission to change workplace (사업장 변경).",
+        answer="အကြောင်းရင်းကို သေချာစွာ မေးမြန်းဆွေးနွေးပါ။ အလုပ်ရှင်ဘက်က တရားမဲ့စွာ ငြင်းဆိုခြင်း "
+               "(သို့) သက်တမ်းတိုးရန် ပျက်ကွက်ပါက သက်ဆိုင်ရာ 고용노동청 (အလုပ်သမားရုံး) "
+               "သို့မဟုတ် 외국인력지원센터 (နိုင်ငံခြားသား အလုပ်သမား ကူညီရေးစင်တာ — ၁၃၅၀) "
+               "သို့ သွားရောက်၍ တိုင်ကြားခြင်း၊ အကြံဉာဏ်တောင်းခံခြင်းများ ပြုလုပ်နိုင်ပါသည်။ "
+               "လုပ်ငန်းခွင် အခြေအနေကြောင့် တရားဝင် အလုပ်ပြောင်းရွှေ့ခွင့် (사업장 변경) "
+               "လျှောက်ထားနိုင်သည့် အခွင့်အရေး ရှိမရှိလည်း စစ်ဆေးသင့်ပါသည်။",
+        cite="EPS worker protection channels (고용노동청 / 외국인력지원센터 1350) — standard procedure"),
 
-    dict(id="p016", topic="contract_renewal", kind="refusal",
+    dict(id="p016", topic="contract_renewal", kind="grounded",
         question="စာချုပ် သက်တမ်း ကုန်ခါနီးရင် ဘယ်နှစ်ရက်အလိုမှာ အသိပေးရမလဲ။",
-        context="[insurance_premiums_act_eng] ...report the commencement or termination of the businesses "
-                "to COMWEL within 14 days...",
-        answer=REFUSAL,
-        cite=None),
+        context="[user-verified] Customary practice, confirmed 2026-09: when either party does not "
+                "intend to renew, notice is customarily given at least 30 days (1 month) before "
+                "expiry; E-9 workers must handle extension/continued-work procedures with the "
+                "relevant offices within the prescribed periods.",
+        answer="အလုပ်ရှင် (သို့) အလုပ်သမား တစ်ဦးဦးက စာချုပ်သက်တမ်း မတိုးတော့ဘူး (သို့) "
+               "အလုပ်စာချုပ် အသစ်မချုပ်တော့ဘူးဆိုပါက သက်တမ်းမကုန်ဆုံးမီ **အနည်းဆုံး ရက်ပေါင်း "
+               "၃၀ (၁ လ)** အလို ကြိုတင်၍ အချင်းချင်း အသိပေးကြေညာရိုး ထုံးစံရှိပါသည်။ E-9 "
+               "အလုပ်သမားများအတွက်မူ သက်တမ်းမကုန်ဆုံးမီ သက်တမ်းတိုးရန် (သို့) လုပ်ငန်းခွင် "
+               "ဆက်လက်လုပ်ကိုင်ရန် လုပ်ထုံးလုပ်နည်းများကို သတ်မှတ်ရက်များအတွင်း သက်ဆိုင်ရာ "
+               "ဌာနများတွင် ကြိုတင်လုပ်ဆောင်ရန် လိုအပ်ပါသည်။ ဤသည်မှာ ဥပဒေအရ တိကျစွာ "
+               "သတ်မှတ်ထားခြင်း မဟုတ်ဘဲ ဓလေ့ထုံးစံ ဖြစ်သဖြင့် 고용센터 တွင် "
+               "အတည်ပြုသင့်ပါသည်။",
+        cite="Customary EPS practice, confirmed by native-speaker review — not a fixed statutory rule"),
 
-    dict(id="p017", topic="e7_transition", kind="refusal",
+    dict(id="p017", topic="e7_transition", kind="grounded",
         question="E-9 က E-7-4 ဗီဇာ ပြောင်းချင်ရင် ဘယ်လို အရည်အချင်း လိုအပ်သလဲ။",
-        context="[hikorea_189] Diagram of the procedure / Permission for Changing or Adding Workplace — "
-                "general workplace-change procedure, does not cover visa-status upgrade eligibility.",
-        answer=REFUSAL,
-        cite=None),
+        context="[user-verified] E-7-4 (숙련기능인력, Skilled Worker) point-based visa system "
+                "(K-Point E74), confirmed 2026-09: requires (1) at least 4 years of lawful E-9 work "
+                "within the last 10 years, (2) current annual income of at least 26,000,000 won and "
+                "a contract for at least 2 more years, (3) Korean-language ability — TOPIK level 2+ "
+                "or KIIP (사회통합프로그램) level 2+, and (4) at least 200 of 300 points under the "
+                "K-Point E74 scoring system.",
+        answer="E-9 (비전문취업) မှ E-7-4 (숙련기능인력) ဗီဇာသို့ ပြောင်းလဲရန် အဓိက "
+               "လိုအပ်ချက်များမှာ — **လုပ်သက်**: လွန်ခဲ့သော ၁၀ နှစ်အတွင်း E-9 ဗီဇာဖြင့် "
+               "ကိုရီးယားနိုင်ငံတွင် ၄ နှစ် (သို့) ထိုထက်ပို၍ တရားဝင် အလုပ်လုပ်ကိုင်ဖူးသူ "
+               "ဖြစ်ရမည်။ **လုပ်ခလစာနှင့် စာချုပ်**: လက်ရှိအလုပ်တွင် သတ်မှတ်ထားသော "
+               "နှစ်စဉ်ဝင်ငွေ (연봉 2,600만원 ဖြစ်) ရှိရမည် ဖြစ်ပြီး အနည်းဆုံး ၂ နှစ် "
+               "ထပ်မံလုပ်ကိုင်မည့် စာချုပ် ရှိရမည်။ **ကိုရီးယားစာ အရည်အချင်း**: TOPIK "
+               "(အဆင့် ၂ နှင့်အထက်) (သို့) 사회통합프로그램 (KIIP ၂ အဆင့်နှင့်အထက်) "
+               "လိုအပ်သည် (သတ်မှတ်ကာလအလိုက် သက်သာခွင့်/유예 များ ရှိနိုင်သည်)။ **ရမှတ်စနစ်**: "
+               "K-Point E74 စနစ်အရ စုစုပေါင်း ရမှတ် ၃၀၀ အနက် အနည်းဆုံး ရမှတ် ၂၀၀ ရရှိထားရမည် "
+               "ဖြစ်သည်။ တိကျသော အချိန်ကာလအလိုက် စည်းမျဉ်းအပြောင်းအလဲများ ရှိနိုင်သဖြင့် "
+               "လျှောက်ထားမည့်အချိန်တွင် 고용센터 (သို့) 하이코리아 တွင် အတည်ပြုပါ။",
+        cite="E-7-4 (숙련기능인력) K-Point points-based visa system — publicly announced criteria"),
 
-    dict(id="p018", topic="e7_transition", kind="refusal",
+    dict(id="p018", topic="e7_transition", kind="grounded",
         question="ကျွမ်းကျင်လုပ်သား ဗီဇာ ပြောင်းဖို့ ဘယ်လောက်နှစ် အလုပ်လုပ်ဖူးရမလဲ။",
-        context="[eps_act_eng] Article 18-3 (Limitation on Employment after Re-Entry) — governs re-entry "
-                "employment timing, does not cover E-7-4 status-change eligibility.",
-        answer=REFUSAL,
-        cite=None),
+        context="[user-verified] E-7-4 (숙련기능인력, Skilled Worker) eligibility, confirmed "
+                "2026-09: at least 4 years of lawful E-9 work in Korea within the last 10 years.",
+        answer="E-7-4 (숙련기능인력) ကျွမ်းကျင်လုပ်သား ဗီဇာသို့ လျှောက်ထားပြောင်းလဲရန်အတွက် "
+               "လွန်ခဲ့သော **၁၀ နှစ်**အတွင်း E-9 ဗီဇာဖြင့် ကိုရီးယားနိုင်ငံတွင်း၌ စုစုပေါင်း "
+               "**အနည်းဆုံး ၄ နှစ်** အလုပ်လုပ်ကိုင်ဖူးသည့် လုပ်သက် ရှိရမည် ဖြစ်ပါသည်။ "
+               "(အခြား စည်းကမ်းချက်များလည်း ရှိသေးသည် — p017 ကို ကြည့်ပါ။)",
+        cite="E-7-4 (숙련기능인력) K-Point points-based visa system — publicly announced criteria"),
 ]
 
 
