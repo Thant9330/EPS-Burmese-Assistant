@@ -1,6 +1,27 @@
-# Phase 3 — Merging a DeepSeek-generated batch
+# Phase 3 — Merging DeepSeek-generated batches
 
-**Run:** 2026-09-02 · dataset **61 → 262 examples** · corpus **502 → 602 chunks** (2 new sources)
+**Run:** 2026-09-02 · dataset **61 → 440 examples** (2 merge rounds + dedup) · corpus
+**502 → 602 chunks** (2 new sources)
+
+## Round 2 (same day, 9 more files / 350 rows)
+
+The user kept adding files while round 1 was being processed. Re-ran the same citation
+check (`scripts/phase3_verify_batch.py`, now a reusable script — see below) against just
+the 9 new files: **the exact same 33 mismatch patterns showed up again**, confirming
+DeepSeek's wrong EPS-Act/Immigration-Act numbering is a consistent, repeatable error in
+its training data, not a one-off. Reused the identical `RELABEL`/`DROP_PATTERNS` from
+round 1 — kept 250/350 (71%). Also cross-checked 6 more `hikorea_e74` rows against the
+user's verified E-7-4 facts, all passed.
+
+**New issue found: cross-batch duplicate questions.** The two DeepSeek sessions covered
+overlapping ground (mostly deep Labor Standards Act detail — night work, maternity leave,
+overtime, dismissal notice). 72 questions ended up asked twice (a few three times) across
+the merged set. None were contradictory this time (same kind, similar answers) — but
+training on the identical input with two different gold answers isn't ideal even when both
+are individually correct, so deduped down to one answer per unique question (kept the
+longer/more complete one). **74 rows dropped**, final count 440.
+
+## Round 1 (below, unchanged)
 
 ## What happened
 

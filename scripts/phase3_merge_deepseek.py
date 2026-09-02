@@ -87,9 +87,11 @@ def real_title(corpus, source_id, num):
     return None
 
 
-def load_rows():
+def load_rows(paths=None):
+    if paths is None:
+        paths = sorted(glob.glob(str(ROOT / "q and a" / "*.json")))
     rows = []
-    for fp in sorted(glob.glob(str(ROOT / "q and a" / "*.json"))):
+    for fp in paths:
         with open(fp, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
@@ -99,8 +101,13 @@ def load_rows():
 
 
 def main():
+    import sys as _sys
     corpus = [json.loads(l) for l in open(ROOT / "data" / "processed" / "corpus.jsonl", encoding="utf-8")]
-    rows = load_rows()
+    # Pass explicit file paths as argv to process only a new batch (avoids re-adding
+    # already-merged files). Falls back to everything in "q and a/" if none given.
+    paths = _sys.argv[1:] or None
+    rows = load_rows(paths)
+    print(f"processing {len(rows)} rows from {'given file list' if paths else 'all of q and a/'}")
 
     # E-7-4 facts the user personally verified earlier (see p017/p018) - used to
     # sanity-check hikorea_e74 rows since we have no real page for that source.
@@ -108,7 +115,8 @@ def main():
                     "2,600만원", "2 year")
 
     kept, dropped_dup_insurance, dropped_mismatch, kept_e74, dropped_e74 = [], 0, 0, 0, 0
-    next_id = 501
+    # NOTE: bump this before each re-run so ids don't collide with what's already merged.
+    next_id = 702
 
     for r in rows:
         m = re.match(r"\[([a-zA-Z0-9_]+)\]", r["context"])
