@@ -7,10 +7,14 @@ forces fp32 for gemma4, so E2B loaded *larger* than 9B in 4-bit: 7.45GB vs
 `notebooks/spike_compare_base_models.ipynb` now only runs 9B. Bug 1 (E2B's
 `text=` keyword crash) is moot and no longer needs fixing.
 
-Status: **spike has not produced numbers yet.** Four Colab runs on a free T4; no
-model has completed a single LoRA step. The remaining blocker is Bug 2 below,
-which is specific to 9B. Everything below is from real tracebacks, not
-guesses.
+Status: **Bug 2 is fixed — 9B trains cleanly. But generation is broken (new
+Bug 3), so Burmese quality still cannot be judged.** The 5th Colab run
+completed all 30 LoRA steps with no dtype error. However both BEFORE and AFTER
+generation on the held-out questions returned unusable output (empty strings
+before, an unbroken string of newline characters after) — see Bug 3 below.
+**The spike has not yet met its actual goal** (confirm the base model
+visibly fails and LoRA visibly fixes it in Burmese) and Phase 3 should not
+start until this is resolved or a workaround is found.
 
 ## Environment (confirmed working)
 
@@ -62,7 +66,7 @@ plain tokenizer, whose first positional parameter is `images`, so `tok(text, ...
 silently bound the prompt to `images` and left `text=None`. Would have been
 fixed by `tok(text=text, ...)`.
 
-## Bug 2 — 9B training dtype clash (NOT fixed, hypothesis only, now the only blocker)
+## Bug 2 — 9B training dtype clash — FIXED (2026-09-02)
 
 ```
 File "unsloth/kernels/utils.py", line 1167, in matmul_lora
@@ -70,25 +74,70 @@ File "unsloth/kernels/utils.py", line 1167, in matmul_lora
 RuntimeError: self and mat2 must have the same dtype, but got Half and BFloat16
 ```
 
-Reached inside `backward()` -> gradient checkpointing -> `apply_lora_qkv`, under
-`torch.amp.autocast_mode.decorate_fwd`.
+**Root cause confirmed: stale `/content/unsloth_compiled_cache`.** A fresh
+kernel with `!rm -rf /content/unsloth_compiled_cache` run right after the
+install cell, before unsloth is imported anywhere, resolved it completely.
+`trainer.accelerator.mixed_precision` printed `fp16` as expected (not `bf16`),
+confirming the earlier autocast-context diagnosis was right — it just needed
+the stale compiled artifact gone. 30/30 steps completed:
 
-Ruled out: it is not the model weights. The dtype census shows **no bfloat16
-parameters at any point**:
-- after load: `{float16: 170, uint8: 294}`
-- after `get_peft_model`: `{float16: 170, uint8: 294, float32: 588}`
+```
+loaded in 371.4 s | VRAM 6.16 GB | content_parts = False
+accelerator.mixed_precision = fp16
+trained 30 steps in 460.6 s | 15.35 s/step | loss 12.2985 | peak 7.96 GB
+```
 
-Also already tried and insufficient: `dtype=torch.float16` on `from_pretrained`,
-and explicit `fp16=True, bf16=False` on `SFTConfig`.
+Loss trend across logged steps: 17.77 → 14.90 → 11.56 → 10.57 → 9.80 → 9.19
+(step 5 → 30). Monotonic decrease, no NaN/divergence — mechanically the
+training loop is healthy on this stack.
 
-So the bf16 is coming from the **autocast context**, not the weights. Leading
-hypothesis, untested: `/content/unsloth_compiled_cache/UnslothSFTTrainer.py` is
-a stale compiled artifact generated during the first (differently-configured)
-run of the session and reused afterwards — the traceback runs through it. Next
-thing to try: `rm -rf /content/unsloth_compiled_cache` before the run, on a
-fresh kernel. If that does not do it, inspect the accelerator's mixed-precision
-setting at train time (`trainer.accelerator.mixed_precision`) rather than
-trusting the SFTConfig flags.
+The fix is now baked into the notebook (`notebooks/spike_compare_base_models.ipynb`,
+cell after the install cell) so it doesn't need rediscovering.
+
+## Bug 3 — generation returns unusable output (NEW, NOT fixed)
+
+Both BEFORE and AFTER generation on the two held-out questions failed, in two
+different ways:
+
+```
+--- BEFORE training ---
+[ 0 ] ''
+[ 1 ] ''
+--- AFTER training ---
+[ 0 ] '\n\n\n\n\n...' (220 newline characters, no other content)
+[ 1 ] '\n\n\n\n\n...' (220 newline characters, no other content)
+```
+
+BEFORE: immediate EOS, nothing generated. AFTER: the model runs to the full
+`max_new_tokens=220` budget but predicts nothing but the newline token —
+never emits real content, never emits EOS either. **This is not a Burmese
+quality problem, it's a generation-config/EOS problem that made the whole
+BEFORE/AFTER comparison uninformative** — we still don't know whether LoRA
+training actually improves Burmese output on this stack.
+
+Suspect: during trainer setup a warning fired —
+`The tokenizer has new PAD/BOS/EOS tokens that differ from the model config
+and generation config. ... Updated tokens: {'eos_token_id': 1}`. This rewrites
+`model.generation_config.eos_token_id` to `1` mid-session. But `generate()` in
+the notebook computes `pad_token_id=tok.pad_token_id or tok.eos_token_id` from
+the **tokenizer**, not from the (now-patched) model generation config — if
+those disagree, `model.generate()` may never see a stop condition it
+recognizes, and/or padding gets mishandled, producing exactly this kind of
+degenerate run-to-max-length output. The empty-string BEFORE result (before
+any patching) suggests a related but distinct mismatch already existed at
+load time.
+
+**Not yet tried:**
+1. Print `tok.eos_token_id`, `tok.pad_token_id`, and `model.generation_config.eos_token_id`
+   right after load and again after `SFTTrainer` construction, to see exactly
+   where they diverge.
+2. Explicitly set `tok.pad_token = tok.eos_token` after load, and pass
+   `eos_token_id=model.generation_config.eos_token_id` explicitly into
+   `model.generate(...)` instead of relying on the tokenizer's possibly-stale
+   value.
+3. Try `skip_special_tokens=False` on one sample to see if the model is
+   actually emitting a real EOS-like token that `skip_special_tokens=True` is
+   silently eating, versus truly never stopping.
 
 ## Operational notes for the next session
 
@@ -107,13 +156,15 @@ trusting the SFTConfig flags.
 
 ## Next actions, in order
 
-1. Fresh kernel, `rm -rf /content/unsloth_compiled_cache`, re-run 9B. Tests the
-   stale-cache hypothesis for Bug 2.
-2. If it still clashes, print `trainer.accelerator.mixed_precision` and force
-   the autocast dtype directly (or run on a bf16-capable GPU — A100/L4 — where
-   the clash may not occur at all, since it's the T4's lack of bf16 hardware
-   that puts autocast in a weird state to begin with).
-3. Once 9B takes 30 steps: read the BEFORE/AFTER Burmese on the two held-out
-   questions. This is now a stack-verification check, not a model decision —
-   the base model is locked. A native reader should still confirm the output
-   is coherent and grounded before moving to Phase 3.
+1. Diagnose and fix Bug 3 (generation returns empty/degenerate output) per the
+   three untried steps listed above — start with printing the three
+   eos/pad token id values at both checkpoints, that will likely make the
+   mismatch obvious.
+2. Once generation produces real text: re-run BEFORE/AFTER on the held-out
+   questions (no need to retrain — Bug 3 is a generation-time issue, so it can
+   be re-tested against a freshly loaded/trained model, or even by fixing
+   `generate()` and calling it against the already-saved `out/checkpoint-30`
+   adapter to avoid a full retrain).
+3. Read the BEFORE/AFTER Burmese and judge it (native-reader call, no metric
+   substitutes) — only then is the spike's actual goal met and Phase 3 safe
+   to start.
