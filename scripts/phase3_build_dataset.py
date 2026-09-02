@@ -440,6 +440,103 @@ ROWS = [
                 "does not address income or support during the job-search period.",
         answer=REFUSAL,
         cite=None),
+
+    # --- Round 3 (2026-09-02): insurance, hand-verified against eps_act_eng
+    # Articles 15, 22-2, 23, and the Article 30 penalty list.
+    dict(id="p201", topic="insurance", kind="grounded",
+        question="အလုပ်ရှင်က ထွက်ခွာချိန်အာမခံ (출국만기보험) မဝယ်ပေးရင် ဘာဖြစ်မလဲ။",
+        context="[eps_act_eng] Article 30 (Penalty Provisions) The following persons shall be "
+                "punished by a fine not exceeding five million won: 1. An employer who fails to "
+                "purchase an insurance policy for departure guaranty, etc., in violation of the "
+                "former part of Article 13 (1).",
+        answer="အလုပ်ရှင်သည် 출국만기보험 (ထွက်ခွာချိန် အာမခံ) ကို မဝယ်ပေးပါက 외국인고용법 "
+               "ပုဒ်မ ၃၀ (Article 30) အရ **၅,၀၀၀,၀၀၀ ဝမ်** အထိ ဒဏ်ငွေ ကျခံရနိုင်ပါသည်။",
+        cite="eps_act_eng — Act on the Employment, etc. of Foreign Workers, Article 30"),
+
+    dict(id="p202", topic="insurance", kind="grounded",
+        question="보증보험 (Guaranty Insurance) ဆိုတာ ဘာလဲ။",
+        context="[eps_act_eng] Article 23 (1) Every employer who runs a business or place of "
+                "business prescribed by Presidential Decree shall purchase a guaranty insurance "
+                "policy in preparation for delay in payment of wages to foreign workers employed "
+                "by him or her.",
+        answer="보증보험 (Guaranty Insurance) သည် အလုပ်ရှင်က နိုင်ငံခြားသား အလုပ်သမားများအား "
+               "လစာ နောက်ကျပေးမှု ဖြစ်ပေါ်လာပါက အာမခံပေးရန် ရည်ရွယ်ထားသော အာမခံဖြစ်ပါသည် — "
+               "외국인고용법 ပုဒ်မ ၂၃(၁) (Article 23(1)) အရ သတ်မှတ်ထားသော လုပ်ငန်းများရှိ "
+               "အလုပ်ရှင်များက ဝယ်ယူရပါသည်။ ဤသည်မှာ 출국만기보험 (ထွက်ခွာချိန်အာမခံ) "
+               "နှင့် မတူပါ — 보증보험 သည် လစာနောက်ကျမှုအတွက်၊ 출국만기보험 သည် "
+               "ထွက်ခွာချိန် အငြိမ်းစားအကျိုးခံစားခွင့်အတွက် ဖြစ်ပါသည်။",
+        cite="eps_act_eng — Act on the Employment, etc. of Foreign Workers, Article 23"),
+
+    dict(id="p203", topic="insurance", kind="grounded",
+        question="အလုပ်သမားကိုယ်တိုင် ဝယ်ရမယ့် အာမခံ ရှိလား။",
+        context="[eps_act_eng] Article 23 (2) Every foreign worker who works as an employee in any "
+                "business or place of business prescribed by Presidential Decree shall purchase a "
+                "personal injury insurance policy in preparation for illness, death, and other "
+                "accidents.",
+        answer="ဟုတ်ကဲ့၊ ရှိပါသည်။ 외국인고용법 ပုဒ်မ ၂၃(၂) (Article 23(2)) အရ၊ သတ်မှတ်ထားသော "
+               "လုပ်ငန်းများရှိ နိုင်ငံခြားသား အလုပ်သမားများသည် နာမကျန်းမှု၊ သေဆုံးမှု နှင့် "
+               "အခြားမတော်တဆမှုများအတွက် 상해보험 (ကိုယ်ခန္ဓာထိခိုက်မှု အာမခံ) ကို ကိုယ်တိုင် "
+               "ဝယ်ယူရပါသည် — ၎င်းသည် 산재보험 (အလုပ်ခွင်ထိခိုက်မှု အာမခံ) နှင့် ကွဲပြားပါသည်။",
+        cite="eps_act_eng — Act on the Employment, etc. of Foreign Workers, Article 23"),
+
+    dict(id="p204", topic="insurance", kind="grounded",
+        question="အလုပ်ရှင်က အာမခံကြေးကို ၃ ကြိမ်ထက်ပို၍ နောက်ကျပေးရင် ဘာဖြစ်မလဲ။",
+        context="[eps_act_eng] Article 30: 5. An employer who delays payments of monthly insurance "
+                "premiums or trust money for an insurance for departure guaranty, etc. on three or "
+                "more occasions, in violation of the latter part of Article 13 (1), shall be "
+                "punished by a fine not exceeding five million won.",
+        answer="ဟုတ်ကဲ့၊ ဒဏ်ငွေ ကျခံရနိုင်ပါသည်။ 외국인고용법 ပုဒ်မ ၃၀ (Article 30) အရ၊ "
+               "출국만기보험 (ထွက်ခွာချိန်အာမခံ) ၏ လစဉ်ကြေး (သို့) ယုံကြည်အပ်နှံငွေကို ၃ ကြိမ် "
+               "(သို့) ထိုထက်ပို၍ နောက်ကျပေးဆောင်ပါက အလုပ်ရှင်သည် **၅,၀၀၀,၀၀၀ ဝမ်** အထိ "
+               "ဒဏ်ငွေ ကျခံရနိုင်ပါသည်။",
+        cite="eps_act_eng — Act on the Employment, etc. of Foreign Workers, Article 30"),
+
+    dict(id="p205", topic="insurance", kind="grounded",
+        question="အလုပ်ရှင်က နေအိမ်/အိပ်ခန်း ပေးရင် ဘယ်လိုအချက်တွေ အသိပေးရမလဲ။",
+        context="[eps_act_eng] Article 22-2 dormitory information disclosure requirements list: "
+                "2. A location in which the dormitory is established; 3. The residential environment "
+                "of the dormitory; 4. The size of the dormitory; 5. Other matters necessary for the "
+                "establishment and operation of the dormitory.",
+        answer="외국인고용법 ပုဒ်မ ၂၂-၂ (Article 22-2) အရ၊ အလုပ်ရှင်သည် နေအိမ် (dormitory) "
+               "ပေးအပ်မည်ဆိုပါက အောက်ပါ အချက်များကို ကြိုတင် အသိပေးရပါမည် — တည်နေရာ "
+               "(location)၊ နေထိုင်ရေး ပတ်ဝန်းကျင် အခြေအနေ (residential environment)၊ "
+               "အရွယ်အစား (size)၊ နှင့် အခြားလိုအပ်သော အချက်များ။",
+        cite="eps_act_eng — Act on the Employment, etc. of Foreign Workers, Article 22-2"),
+
+    dict(id="p206", topic="insurance", kind="grounded",
+        question="ပြည်ပပြန်ခရီးစရိတ် အာမခံ (귀국비용보험) ကို ဘယ်သူက ဝယ်ရမလဲ။",
+        context="[eps_act_eng] Article 15 (Insurance and Trust for Expenses for Return to Home "
+                "Country) (1) Any foreign worker shall purchase an insurance policy or a trust deed "
+                "to cover expenses necessary for their return to home country.",
+        answer="귀국비용보험 (ပြည်ပပြန်ခရီးစရိတ် အာမခံ) ကို 외국인고용법 ပုဒ်မ ၁၅ (Article 15) "
+               "အရ **နိုင်ငံခြားသား အလုပ်သမား ကိုယ်တိုင်** ဝယ်ယူရပါသည် — ၎င်းသည် အလုပ်ရှင်က "
+               "ဝယ်ပေးရသော 출국만기보험 (ထွက်ခွာချိန်အာမခံ၊ ပုဒ်မ ၁၃) နှင့် **မတူပါ**၊ "
+               "မမှားရန် သတိပြုပါ။",
+        cite="eps_act_eng — Act on the Employment, etc. of Foreign Workers, Article 15"),
+
+    dict(id="p207", topic="insurance", kind="refusal",
+        question="보증보험 ကို လုပ်ငန်းအားလုံး ဝယ်ရမလား။",
+        context="[eps_act_eng] Article 23 (1) applies to \"a business or place of business "
+                "prescribed by Presidential Decree, taking into consideration the size of business, "
+                "the characteristics of each industry, and other relevant factors\" — the specific "
+                "threshold is set in the Presidential Decree, not in the Act text retrieved here.",
+        answer=REFUSAL,
+        cite=None),
+
+    dict(id="p208", topic="insurance", kind="refusal",
+        question="ထွက်ခွာချိန်အာမခံ ငွေပမာဏကို ဘယ်လို တွက်ချက်လဲ။",
+        context="[eps_act_eng] Article 13 establishes the insurance requirement itself; the "
+                "calculation method for the payout amount is not in the text retrieved here.",
+        answer=REFUSAL,
+        cite=None),
+
+    dict(id="p209", topic="insurance", kind="refusal",
+        question="산재보험 ရလဒ်ကို ဘယ်ဌာနက စီမံခန့်ခွဲပေးလဲ။",
+        context="[industrial_accident_decree_eng] covers the deliberation committee and benefit "
+                "classification rules; does not clearly name the day-to-day claims-administering "
+                "body in the text retrieved here.",
+        answer=REFUSAL,
+        cite=None),
 ]
 
 
