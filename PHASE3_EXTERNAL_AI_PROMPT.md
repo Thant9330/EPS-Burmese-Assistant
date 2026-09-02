@@ -4,6 +4,13 @@ Copy everything in the box below into the other AI. Give it real source text to 
 (paste in text from the official pages listed, or let it search/fetch them if it can browse) —
 without real source text it will guess, which is exactly what we're avoiding.
 
+**How many:** the project's overall target is 800-1500 examples; we have 61 so far. Don't
+force the other AI toward an exact number — real source material runs out before fake volume
+does, and that's fine (that's the same wall we hit ourselves). A realistic ask for one pass:
+**150-300 more**, in batches of 30-50. If it starts repeating itself or thinning out on real
+source text, stop that pass rather than padding with guesses — bring what's genuinely
+grounded, and we do another pass later if we still need more.
+
 When you bring the results back, paste the raw JSONL and I'll check it against the format,
 merge it in, and flag anything that looks unsupported by its own context before it goes in the file.
 
