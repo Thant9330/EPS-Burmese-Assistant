@@ -1,9 +1,16 @@
-# Training spike — run state (paused 2026-09-01)
+# Training spike — run state (updated 2026-09-02)
+
+**Decision: base model locked to SEA-LION v3 9B.** E2B is dropped from the
+comparison — its tokenizer advantage doesn't survive a bf16-less T4 (Unsloth
+forces fp32 for gemma4, so E2B loaded *larger* than 9B in 4-bit: 7.45GB vs
+6.16GB), and this matches Phase 0's original choice before the re-check.
+`notebooks/spike_compare_base_models.ipynb` now only runs 9B. Bug 1 (E2B's
+`text=` keyword crash) is moot and no longer needs fixing.
 
 Status: **spike has not produced numbers yet.** Four Colab runs on a free T4; no
-model has completed a single LoRA step. Both models still fail, for two
-different and now precisely-located reasons. Everything below is from real
-tracebacks, not guesses.
+model has completed a single LoRA step. The remaining blocker is Bug 2 below,
+which is specific to 9B. Everything below is from real tracebacks, not
+guesses.
 
 ## Environment (confirmed working)
 
@@ -47,26 +54,15 @@ than the 9B in 4-bit — 7.45 GB vs 6.16 GB. The 1.85x tokenizer advantage does
 not survive contact with a bf16-less GPU. Worth re-testing on an A100/L4 where
 bf16 exists before concluding anything.
 
-## Bug 1 — E2B generation (fix applied, NOT yet verified by a run)
+## Bug 1 — E2B generation (moot, model dropped)
 
-```
-File "unsloth_zoo/tokenizer_utils.py", line 602, in patched_call
-    return original_call(self, images=images, text=text, videos=videos, **kwargs)
-File "transformers/models/gemma4/processing_gemma4.py", line 130, in __call__
-    elif not isinstance(text, list) and not isinstance(text[0], str):
-TypeError: 'NoneType' object is not subscriptable
-```
+E2B is no longer in scope — see the decision note at the top. Left here only
+so the original diagnosis isn't lost: Gemma 4 loads a **processor**, not a
+plain tokenizer, whose first positional parameter is `images`, so `tok(text, ...)`
+silently bound the prompt to `images` and left `text=None`. Would have been
+fixed by `tok(text=text, ...)`.
 
-Gemma 4 loads a **processor**, not a plain tokenizer. Its first positional
-parameter is `images`. So `tok(text, ...)` bound our prompt to `images` and left
-`text=None`. Fix: pass `text=` as a keyword — `tok(text=text, ...)`. Applied to
-the notebook; needs a run to confirm.
-
-Related, already fixed: `needs_parts()` must probe with `tokenize=True`. A
-`tokenize=False` probe passes for both model families and reports `False` for
-Gemma 4, which is wrong — the multimodal path only engages when tokenizing.
-
-## Bug 2 — 9B training dtype clash (NOT fixed, hypothesis only)
+## Bug 2 — 9B training dtype clash (NOT fixed, hypothesis only, now the only blocker)
 
 ```
 File "unsloth/kernels/utils.py", line 1167, in matmul_lora
@@ -111,13 +107,13 @@ trusting the SFTConfig flags.
 
 ## Next actions, in order
 
-1. Fresh kernel, `rm -rf /content/unsloth_compiled_cache`, re-run. This tests
-   the E2B keyword fix and the 9B stale-cache hypothesis in one pass.
-2. If the 9B still clashes, print `trainer.accelerator.mixed_precision` and
-   force the autocast dtype directly.
-3. Only once both models take 30 steps: read the BEFORE/AFTER Burmese on the two
-   held-out questions and decide the base model. That judgement needs a native
-   reader — no metric in this notebook substitutes for it.
-4. Re-run the comparison on a bf16-capable GPU (A100/L4) before committing to
-   E2B or 9B, since the T4's lack of bf16 is currently distorting the VRAM
-   comparison against E2B.
+1. Fresh kernel, `rm -rf /content/unsloth_compiled_cache`, re-run 9B. Tests the
+   stale-cache hypothesis for Bug 2.
+2. If it still clashes, print `trainer.accelerator.mixed_precision` and force
+   the autocast dtype directly (or run on a bf16-capable GPU — A100/L4 — where
+   the clash may not occur at all, since it's the T4's lack of bf16 hardware
+   that puts autocast in a weird state to begin with).
+3. Once 9B takes 30 steps: read the BEFORE/AFTER Burmese on the two held-out
+   questions. This is now a stack-verification check, not a model decision —
+   the base model is locked. A native reader should still confirm the output
+   is coherent and grounded before moving to Phase 3.

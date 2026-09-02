@@ -77,6 +77,13 @@ Sailor2 shares Qwen's tokenizer (no help); SEA-LION on Llama 3.1 is worse at 7.7
 
 Decisions locked: base = SEA-LION/Gemma2 9B · `max_seq_length` = 2048 · free Colab T4 suffices.
 
+**Re-checked 2026-09-02** against newer SEA-LION releases (see
+[`PHASE0_TOKENIZER_RESULTS.md`](PHASE0_TOKENIZER_RESULTS.md)): Gemma 4's
+tokenizer (E2B) looked 1.85x cheaper than Gemma 2's 3.32x on paper, but a
+training spike found that advantage doesn't survive a bf16-less T4 — Unsloth
+forces fp32 for gemma4 without bf16 hardware, so E2B loaded *larger* than 9B
+in 4-bit (7.45GB vs 6.16GB). **9B stays the base model.**
+
 ### Phase 1 — Corpus build ✅ DONE (2026-09-01)
 
 **402 chunks · 199,961 tokens · 7 primary legal documents**, English, full provenance on every
