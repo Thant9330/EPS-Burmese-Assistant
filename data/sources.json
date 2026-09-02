@@ -1,5 +1,5 @@
 {
-  "_comment": "Phase 1 corpus sources - primary/authoritative only. Every entry's license_note is copied onto each chunk so the model can disclaim correctly. robots.txt checked 2026-09-01: law.go.kr 'Allow: /'; elaw.klri.re.kr blocks only search/admin endpoints (viewer.do is allowed); eps.go.kr 'Allow: /'.",
+  "_comment": "Phase 1 corpus sources - primary/authoritative only. Every entry's license_note is copied onto each chunk so the model can disclaim correctly. robots.txt checked 2026-09-01: law.go.kr 'Allow: /'; elaw.klri.re.kr blocks only search/admin endpoints (viewer.do is allowed); eps.go.kr 'Allow: /'. robots.txt checked 2026-09-02 (Phase 3 gap-fill): easylaw.go.kr 'Allow: /'.",
   "_known_gap": "Korean-language originals are not yet ingested - law.go.kr Korean pages are JS-rendered and returned only a shell. Retrieval is English-side by design (see plan), so this is deferred, not blocking. Korean official terms are handled via a Phase 3 glossary instead.",
   "sources": [
     {
@@ -102,6 +102,55 @@
       "_verified": "hseq=67169 serves the Enforcement Decree, not the parent Act (verified 2026-09-01)",
       "extractor": "statute",
       "min_chars": 2000
+    },
+    {
+      "id": "labor_standards_act_eng",
+      "title": "Labor Standards Act",
+      "url": "https://www.law.go.kr/LSW/engLsInfoR.do?lsiSeq=232199",
+      "lang": "en",
+      "authority": "Korea Ministry of Government Legislation (law.go.kr)",
+      "doc_type": "statute",
+      "topics": [
+        "wages",
+        "overtime",
+        "working_hours",
+        "labour_rights"
+      ],
+      "license_note": "Unofficial English translation. Not legally effective; the Korean original governs.",
+      "extractor": "statute",
+      "min_chars": 2000
+    },
+    {
+      "id": "health_insurance_premium_easylaw",
+      "title": "National Health Insurance (Employer-sponsored Insurance) - Premiums",
+      "url": "https://m.easylaw.go.kr/MOM/SubCsmOvRetrieve.laf?ccfNo=4&cciNo=1&cnpClsNo=2&csmSeq=1254&langCd=700101",
+      "lang": "en",
+      "authority": "Korea Ministry of Government Legislation - Easy-to-Find Practical Law (easylaw.go.kr)",
+      "doc_type": "guide",
+      "topics": [
+        "insurance",
+        "health_insurance",
+        "premiums"
+      ],
+      "license_note": "Plain-language government legal guide, not the statute itself. For reference only; verify current rates with NHIS.",
+      "extractor": "statute",
+      "min_chars": 500
+    },
+    {
+      "id": "wage_arrears_easylaw",
+      "title": "Wage Arrears (Unpaid Wages) - How to File a Complaint",
+      "url": "https://m.easylaw.go.kr/MOM/SubCsmOvRetrieve.laf?langCd=700101&csmSeq=2800&ccfNo=1&cciNo=1&cnpClsNo=1",
+      "lang": "en",
+      "authority": "Korea Ministry of Government Legislation - Easy-to-Find Practical Law (easylaw.go.kr)",
+      "doc_type": "guide",
+      "topics": [
+        "wages",
+        "wage_arrears",
+        "complaint_procedure"
+      ],
+      "license_note": "Plain-language government legal guide, not the statute itself. For reference only; verify current procedure with the local labor office.",
+      "extractor": "statute",
+      "min_chars": 500
     },
     {
       "id": "insurance_premiums_act_eng",

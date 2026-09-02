@@ -140,7 +140,7 @@ Registration" — a correct rank-1 hit scored as a miss. Keyword labels are too 
 whole-document labels too loose (167/432 chunks gold on one question). Chunk-level relevance
 needs human judgement; that is Phase 6 work, and no hit@5 figure should be quoted until then.
 
-### Phase 3 — Dataset (~800–1500 pairs) ← 80% of the real work
+### Phase 3 — Dataset (~800–1500 pairs) ← 80% of the real work 🔄 IN PROGRESS (2026-09-02)
 Format: `{context: [English chunks], question: Burmese, answer: Burmese}`
 
 Bootstrap by distillation from a strong model, then **human-review a slice yourself** — you
@@ -150,6 +150,19 @@ are the quality bar, and no automated metric replaces that. Reuse the existing
 Deliberately include **~15% unanswerable examples** where context doesn't support an answer
 and the gold output is a refusal. Without these the model learns to always answer, which is
 the dangerous failure mode in an immigration context.
+
+**Target refined**: the spike found the untrained base model already produces decent
+Burmese, so the measurable gain isn't "can it answer" — it's **exact Korean official-term
+usage, factual accuracy against Korean labor law, and natural tone**. See
+[[phase3-target-refined]] memory / `SPIKE_RUN_STATE.md`.
+
+**First batch done**: 18 examples (10 grounded, 8 refusal), see
+[`PHASE3_FIRST_BATCH.md`](PHASE3_FIRST_BATCH.md). Key finding: automatic top-5 retrieval
+misses the correct source article often enough that dataset context must be hand-verified,
+not trusted from retrieval alone — production retrieval (~80% hit@5, Phase 2) is a separate,
+already-measured concern. Also closed a small corpus gap (3 new sources: overtime pay rate,
+unpaid-wage complaint routing; health-insurance premium source still broken, needs a real fix).
+Awaiting native-reader review of the first batch before scaling further.
 
 ### Phase 4 — Baseline eval BEFORE training (do NOT skip)
 Run the full eval suite on the untuned base model. This is the entire scientific value of the
