@@ -1,5 +1,5 @@
 """
-Phase 3 - build the first real batch of the training dataset.
+Phase 3 - build the training dataset, in small hand-verified rounds.
 
 Unlike a blind top-5-retrieval pipeline, context for each question here was
 hand-verified: for every question, the actual source article was found and read in
@@ -8,8 +8,14 @@ automatic retrieval alone. Automatic top-5 retrieval (scripts/phase3_retrieve.py
 missed the correct article for several natural-phrasing questions even when the
 article exists in the corpus - production retrieval is measured separately in
 Phase 2 (~80% hit@5); dataset construction uses a higher bar; the two are not the
-same process. Where the corpus (after the phase-3 gap-fill sources) still doesn't
-support the question, the example is a refusal - not a guess.
+same process. Where the corpus still doesn't support the question, the example is
+a refusal - not a guess. Where a fact isn't in the corpus but the user (a native
+Burmese speaker) confirms it directly, context is marked [user-verified] instead
+of a fake document citation.
+
+Round 1 (p001-p018): first batch across all 6 topics, gap-fill.
+Round 2 (p101-p115): more workplace_change, using Article 25(3)/(4) and Decree
+Article 30 details found while re-reading the EPS Act for round 1.
 
 Run: .venv/Scripts/python.exe scripts/phase3_build_dataset.py
 """
@@ -279,6 +285,161 @@ ROWS = [
                "**အနည်းဆုံး ၄ နှစ်** အလုပ်လုပ်ကိုင်ဖူးသည့် လုပ်သက် ရှိရမည် ဖြစ်ပါသည်။ "
                "(အခြား စည်းကမ်းချက်များလည်း ရှိသေးသည် — p017 ကို ကြည့်ပါ။)",
         cite="E-7-4 (숙련기능인력) K-Point points-based visa system — publicly announced criteria"),
+
+    # --- Round 2 (2026-09-02): more workplace_change, hand-verified against
+    # eps_act_eng Article 25(3)/(4), eps_decree_eng Article 30, and hikorea_189's
+    # full "Criteria for granting/denying" section.
+    dict(id="p101", topic="workplace_change", kind="grounded",
+        question="၃ လအတွင်း အလုပ်သစ် မရှာနိုင်ရင် ဘာဖြစ်မလဲ။",
+        context="[eps_act_eng] Article 25 (3) Any foreign worker who fails to obtain permission for "
+                "change of workplace within three months from the date of the application, or who "
+                "fails to file an application for change within one month after the expiration of "
+                "the employment contract, shall leave the Republic of Korea: Provided, That for a "
+                "foreign worker who is unable to do so due to causes such as an accident on duty, "
+                "illnesses, pregnancy and childbirth, such period shall be calculated from the date "
+                "on which such cause ceases to exist.",
+        answer="외국인고용법 ပုဒ်မ ၂၅(၃) (Article 25(3)) အရ၊ အလုပ်ခွင်ပြောင်းလွှင့်ခွင့် "
+               "လျှောက်ထားပြီးနောက် ၃ လအတွင်း ခွင့်ပြုချက် မရရှိပါက (သို့) စာချုပ်သက်တမ်းကုန်ပြီးနောက် "
+               "၁ လအတွင်း လျှောက်လွှာ မတင်နိုင်ပါက **ကိုရီးယားမှ ထွက်ခွာရမည်** ဖြစ်ပါသည်။ သို့သော် "
+               "အလုပ်ခွင်ထိခိုက်မှု၊ နာမကျန်းမှု၊ ကိုယ်ဝန်ဆောင်ခြင်း (သို့) မီးဖွားခြင်း စသည့် "
+               "အကြောင်းများကြောင့် မဖြစ်နိုင်ပါက ထိုအကြောင်းရင်း ကုန်ဆုံးသည့်နေ့မှစ၍ "
+               "ရေတွက်ရပါမည်။",
+        cite="eps_act_eng — Act on the Employment, etc. of Foreign Workers, Article 25(3)"),
+
+    dict(id="p102", topic="workplace_change", kind="grounded",
+        question="ဖျားနာနေရင် (သို့) ကိုယ်ဝန်ဆောင်နေရင် အလုပ်ခွင်ပြောင်းဖို့ အချိန်ကန့်သတ်ချက်ကို "
+                 "ဆိုင်းငံ့ပေးလား။",
+        context="[eps_act_eng] Article 25 (3) proviso: for a foreign worker unable to obtain "
+                "permission or file an application due to causes such as an accident on duty, "
+                "illnesses, pregnancy and childbirth, such period shall be calculated from the date "
+                "on which such cause ceases to exist.",
+        answer="ဟုတ်ကဲ့၊ ဆိုင်းငံ့ပေးပါသည်။ 외국인고용법 ပုဒ်မ ၂၅(၃) (Article 25(3)) အရ၊ "
+               "အလုပ်ခွင်ထိခိုက်မှု၊ နာမကျန်းမှု၊ ကိုယ်ဝန်ဆောင်ခြင်း (သို့) မီးဖွားခြင်းကြောင့် "
+               "ခွင့်ပြုချက် မရနိုင်ခြင်း (သို့) လျှောက်လွှာ မတင်နိုင်ခြင်း ဖြစ်ပါက ၃ လ (သို့) ၁ လ "
+               "အချိန်ကာလကို ထိုအကြောင်းရင်း ကုန်ဆုံးသည့်နေ့မှသာ စတင်ရေတွက်ပါသည်။",
+        cite="eps_act_eng — Act on the Employment, etc. of Foreign Workers, Article 25(3)"),
+
+    dict(id="p103", topic="workplace_change", kind="grounded",
+        question="အလုပ်ရှင်ချို့ယွင်းချက်ကြောင့် အလုပ်ခွင်ပြောင်းရင် အကြိမ်ရေ ကန့်သတ်ချက်ထဲ "
+                 "ပါဝင်လား။",
+        context="[eps_act_eng] Article 25 (4) Foreign worker's change of business or place of "
+                "business shall not, in principle, exceed three times during the period under "
+                "Article 18 or two times during the extended period under Article 18-2 (1): "
+                "Provided, That the foregoing shall not include cases of change on any ground "
+                "prescribed in paragraph (1) 2.",
+        answer="မပါဝင်ပါ။ 외국인고용법 ပုဒ်မ ၂၅(၄) (Article 25(4)) အရ၊ အလုပ်ခွင် ပြောင်းလဲခွင့်ကို "
+               "ပုံမှန်အားဖြင့် ၃ ကြိမ် (တာဝန်ကာလ တိုးချဲ့ပါက ၂ ကြိမ်) ကန့်သတ်ထားသော်လည်း၊ "
+               "အလုပ်ရှင်၏ ချို့ယွင်းမှု (Article 25(1)(2) — စီးပွားရေးရပ်ဆိုင်း၊ လုပ်ငန်းပိတ်ခြင်း၊ "
+               "မတရားဆက်ဆံမှု စသည်) ကြောင့် ပြောင်းရသော အကြိမ်များကို ဤကန့်သတ်ချက်တွင် "
+               "မထည့်တွက်ပါ။",
+        cite="eps_act_eng — Act on the Employment, etc. of Foreign Workers, Article 25(4)"),
+
+    dict(id="p104", topic="workplace_change", kind="grounded",
+        question="အလုပ်ခွင်ထိခိုက်ဒဏ်ရာရလို့ လက်ရှိအလုပ် ဆက်မလုပ်နိုင်တော့ရင် အလုပ်ခွင်ပြောင်းလို့ "
+                 "ရလား။",
+        context="[eps_decree_eng] Article 30 (Change of Business or Place of Business) (1) means "
+                "where it is deemed that a foreign worker is unfit to continue service in the "
+                "business or place of business due to his or her own injury, etc., but it is "
+                "possible for him or her to work for another business or place of business.",
+        answer="ဟုတ်ကဲ့၊ ရနိုင်ပါသည်။ 시행령 ပုဒ်မ ၃၀ (Enforcement Decree Article 30) အရ၊ "
+               "မိမိကိုယ်တိုင် ထိခိုက်ဒဏ်ရာစသည့် အကြောင်းကြောင့် လက်ရှိအလုပ်ကို ဆက်လုပ်ရန် "
+               "မသင့်တော်တော့သော်လည်း၊ အခြားလုပ်ငန်း (သို့) နေရာတွင် အလုပ်လုပ်နိုင်သေးပါက "
+               "အလုပ်ခွင် ပြောင်းလဲခွင့် လျှောက်ထားနိုင်ပါသည်။",
+        cite="eps_decree_eng — Enforcement Decree of the EPS Act, Article 30"),
+
+    dict(id="p105", topic="workplace_change", kind="grounded",
+        question="အလုပ်စာချုပ် သက်တမ်းကုန်ပြီးနောက် အလုပ်ခွင်ပြောင်းဖို့ ဘယ်နှစ်ရက်အတွင်း "
+                 "လျှောက်ရမလဲ။",
+        context="[eps_act_eng] Article 25 (3) ... or who fails to file an application for change of "
+                "business or place of business within one month after the expiration of the "
+                "employment contract with the employer shall leave the Republic of Korea.",
+        answer="စာချုပ်သက်တမ်း ကုန်ဆုံးပြီးနောက် **၁ လ**အတွင်း အလုပ်ခွင် ပြောင်းလဲခွင့် လျှောက်လွှာ "
+               "တင်သွင်းရပါမည်။ ၁ လထက် ကျော်လွန်ပါက ကိုရီးယားမှ ထွက်ခွာရနိုင်ပါသည် — 외국인고용법 "
+               "ပုဒ်မ ၂၅(၃) (Article 25(3))။",
+        cite="eps_act_eng — Act on the Employment, etc. of Foreign Workers, Article 25(3)"),
+
+    dict(id="p106", topic="workplace_change", kind="refusal",
+        question="အလုပ်ခွင်ပြောင်းဖို့ လျှောက်ရင် ဘယ်စာရွက်စာတမ်းတွေ အတိအကျ လိုအပ်သလဲ။",
+        context="[hikorea_189] Principal or the assigned agent must submit the required documents "
+                "(See the documents by the status) to the local Immigration Office.",
+        answer=REFUSAL,
+        cite=None),
+
+    dict(id="p107", topic="workplace_change", kind="grounded",
+        question="အလုပ်ခွင် အခြေစိုက်နေရာ ၂ ခုထက်ပို၍ ထပ်တိုးလို့ရလား။",
+        context="[hikorea_189] Adding more than two workplaces beside the main workplace is "
+                "prohibited.",
+        answer="မရပါ။ အဓိကအလုပ်ခွင်အပြင် နောက်ထပ် အလုပ်ခွင် ၂ ခုထက်ပို၍ ထပ်တိုးခြင်းကို "
+               "တားမြစ်ထားပါသည်။",
+        cite="hikorea_189 — Change/Addition of Workplace (HiKorea)"),
+
+    dict(id="p108", topic="workplace_change", kind="grounded",
+        question="အလုပ်သစ်က မူလထက် လုပ်ခ ပိုများရင် (သို့) အချိန်ပိုကြာရင် ထပ်တိုးလို့ရလား။",
+        context="[hikorea_189] If the added workplace should have longer work hours or higher "
+                "salary than the original workplace, addition of workplace will be restricted.",
+        answer="ကန့်သတ်ချက် ရှိပါသည်။ ထပ်တိုးမည့် အလုပ်ခွင်သည် မူလအလုပ်ခွင်ထက် လုပ်ချိန် ပိုကြာသည် "
+               "(သို့) လုပ်ခ ပိုများသည် ဆိုပါက ထပ်တိုးခွင့်ကို ကန့်သတ်ပါသည်။",
+        cite="hikorea_189 — Change/Addition of Workplace (HiKorea)"),
+
+    dict(id="p109", topic="workplace_change", kind="grounded",
+        question="အလုပ်ခွင် အကြိမ်ကြိမ် ပြောင်းနေရင် ဘာဖြစ်နိုင်လဲ။",
+        context="[hikorea_189] If the foreigner working in too many workplaces or is changing jobs "
+                "too many times without any consistent pattern, he/she will be evaluated. Should the "
+                "foreigner be found to have poor work conduct or is in some way against Korea's "
+                "national interest, then any future change/addition to the workplace will be "
+                "restricted.",
+        answer="အကြောင်းရင်း တသမတ်တည်း မရှိဘဲ အကြိမ်ကြိမ် ပြောင်းနေပါက စိစစ်ခံရနိုင်ပါသည်။ "
+               "အလုပ်လုပ်ပုံအမူအကျင့် ညံ့ဖျင်းသည် (သို့) ကိုရီးယားနိုင်ငံ၏ အကျိုးစီးပွားနှင့် "
+               "ဆန့်ကျင်သည်ဟု တွေ့ရှိပါက နောင်လာမည့် အလုပ်ခွင်ပြောင်းလဲ/ထပ်တိုးမှုများကို "
+               "ကန့်သတ်ခံရနိုင်ပါသည်။",
+        cite="hikorea_189 — Change/Addition of Workplace (HiKorea)"),
+
+    dict(id="p110", topic="workplace_change", kind="grounded",
+        question="အလုပ်ခွင်ပြောင်းခွင့်ကို လူဝင်မှုကြီးကြပ်ရေးက စိစစ်ပြီးမှ ခွင့်ပြုတာလား၊ "
+                 "အလိုအလျောက်ရမလား။",
+        context="[hikorea_189] Any change or addition to a foreigner's workplace must be reviewed "
+                "and granted in advance by the local Immigration.",
+        answer="အလိုအလျောက် မရပါ — 출입국관리사무소 (Local Immigration Office) က ကြိုတင် "
+               "စိစစ်၍ ခွင့်ပြုမှသာ ပြောင်းလဲနိုင်ပါသည်။",
+        cite="hikorea_189 — Change/Addition of Workplace (HiKorea)"),
+
+    dict(id="p111", topic="workplace_change", kind="refusal",
+        question="အလုပ်ခွင်ပြောင်းဖို့ လျှောက်ထားရင် အခကြေးငွေ ပေးရလား။",
+        context="[hikorea_189] How to apply for permission for changing or adding workplace — "
+                "documents and venue are described; no fee amount is stated.",
+        answer=REFUSAL,
+        cite=None),
+
+    dict(id="p112", topic="workplace_change", kind="refusal",
+        question="အလုပ်ခွင်ပြောင်းခွင့် လျှောက်လွှာ ငြင်းပယ်ခံရရင် အယူခံဝင်လို့ရလား။",
+        context="[hikorea_189] Criteria for granting/denying are described; no appeal procedure is "
+                "stated.",
+        answer=REFUSAL,
+        cite=None),
+
+    dict(id="p113", topic="workplace_change", kind="refusal",
+        question="အလုပ်ခွင်ပြောင်းဖို့ လုပ်ငန်းစဉ်လုပ်နေတုန်း အလုပ်ရှင်သစ်က အလုပ်ပေးမည့်ကတိကို "
+                 "ပြန်ရုပ်သိမ်းရင် ဘာဖြစ်မလဲ။",
+        context="[eps_act_eng] Article 25 covers the worker's own application and eligibility; does "
+                "not address a prospective new employer withdrawing an offer mid-process.",
+        answer=REFUSAL,
+        cite=None),
+
+    dict(id="p114", topic="workplace_change", kind="refusal",
+        question="ကိုယ်ဝန်ဆောင်နေတဲ့အတွက်ချည်း အလုပ်ခွင်ပြောင်းခွင့် လျှောက်ထားလို့ရလား။",
+        context="[eps_act_eng] Article 25 (1) lists the grounds for eligibility (employer-side "
+                "termination, business closure/unfair treatment, other Presidential Decree causes); "
+                "pregnancy appears only in Article 25(3) as a reason the 3-month/1-month deadline "
+                "can be paused, not as an independent (1) eligibility ground.",
+        answer=REFUSAL,
+        cite=None),
+
+    dict(id="p115", topic="workplace_change", kind="refusal",
+        question="အလုပ်ခွင်ပြောင်းရှာနေတဲ့ကာလအတွင်း လစာ ရနေဦးမလား။",
+        context="[eps_act_eng] Article 25 covers eligibility and the change/application procedure; "
+                "does not address income or support during the job-search period.",
+        answer=REFUSAL,
+        cite=None),
 ]
 
 
