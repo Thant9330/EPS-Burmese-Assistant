@@ -537,6 +537,144 @@ ROWS = [
                 "body in the text retrieved here.",
         answer=REFUSAL,
         cite=None),
+
+    # --- Round 4 (2026-09-02): alien_registration, stay, status_change, reentry,
+    # stay_violation - hand-verified against previously-untapped HiKorea pages
+    # (hikorea_196, hikorea_170, hikorea_184, hikorea_191, hikorea_7203, hikorea_225).
+    dict(id="p301", topic="alien_registration", kind="grounded",
+        question="နာမည်၊ နိုင်ငံသား ပြောင်းလဲမှုရှိရင် ဘယ်နှစ်ရက်အတွင်း အသိပေးရမလဲ။",
+        context="[hikorea_196] If any of the following incidents should occur to a registered "
+                "foreigner, it must be reported to the local Immigration Office within 15 days from "
+                "its occurrence. Incidents to report: change in name, gender, date of birth, "
+                "nationality; change in passport number, date of issue, validity period; ...",
+        answer="မှတ်ပုံတင်ထားသော အချက်အလက် (နာမည်၊ ကျား/မ၊ မွေးနေ့၊ နိုင်ငံသား) ပြောင်းလဲမှု "
+               "ရှိပါက **၁၅ ရက်**အတွင်း ဒေသဆိုင်ရာ 출입국관리사무소 (Local Immigration Office) "
+               "သို့ အသိပေးတင်ပြရပါမည်။",
+        cite="hikorea_196 — Obligations to Report Changes to Foreigner Registration (HiKorea)"),
+
+    dict(id="p302", topic="alien_registration", kind="grounded",
+        question="နိုင်ငံကူးလက်မှတ် အသစ်ရရင် အသိပေးရမလား။",
+        context="[hikorea_196] Incidents to report: ... When there is a change in passport number, "
+                "date of issue, validity period ... Report period: Within 15 days.",
+        answer="ဟုတ်ကဲ့၊ အသိပေးရပါမည်။ နိုင်ငံကူးလက်မှတ် နံပါတ်၊ ထုတ်ပေးသည့်ရက်၊ သက်တမ်း "
+               "ပြောင်းလဲသွားပါက **၁၅ ရက်**အတွင်း ဒေသဆိုင်ရာ 출입국관리사무소 သို့ "
+               "အသိပေးတင်ပြရပါမည်။",
+        cite="hikorea_196 — Obligations to Report Changes to Foreigner Registration (HiKorea)"),
+
+    dict(id="p303", topic="stay", kind="grounded",
+        question="ရေတိုနေထိုင်ခွင့်နဲ့ ရေရှည်နေထိုင်ခွင့် ဘာကွာသလဲ။",
+        context="[hikorea_170] Foreigner stay is categorized as follows: Short-term stay: Limited, "
+                "up to 90 days of stay. Long-term stay: Limited, more than 91 days of stay. "
+                "Permanent Residency: Unlimited period of stay.",
+        answer="ရေတိုနေထိုင်ခွင့် (Short-term) — ၉၀ ရက်အထိသာ ကန့်သတ်ထားပါသည်။ ရေရှည်နေထိုင်ခွင့် "
+               "(Long-term) — ၉၁ ရက်နှင့်အထက် ကန့်သတ်ထားပါသည်။ ထို့အပြင် ကာလကန့်သတ်ချက် "
+               "မရှိသော ရေရှည်နေထိုင်ခွင့် (Permanent Residency) လည်း ရှိပါသည်။",
+        cite="hikorea_170 — General Affairs (Foreigners' Stay) (HiKorea)"),
+
+    dict(id="p304", topic="stay", kind="grounded",
+        question="ဗီဇာက ခွင့်ပြုထားတဲ့ နေရာမှလွဲပြီး တခြားနေရာမှာ အလုပ်လုပ်လို့ရလား။",
+        context="[hikorea_170] Foreigners seeking employment during their stay in Korea must have "
+                "a visa that allows it, and may only work in workplaces designated by local or "
+                "district Immigration Office. If they wish to change their workplace, permission "
+                "must be received from the local Immigration Office prior to the change.",
+        answer="မရပါ။ 출입국관리사무소 (Local Immigration Office) က သတ်မှတ်ပေးထားသော "
+               "အလုပ်ခွင်တွင်သာ အလုပ်လုပ်ခွင့်ရှိပါသည်။ တခြားနေရာတွင် အလုပ်လုပ်လိုပါက "
+               "အလုပ်ခွင်ပြောင်းလဲခွင့်ကို ကြိုတင် လျှောက်ထား ရယူရပါမည်။",
+        cite="hikorea_170 — General Affairs (Foreigners' Stay) (HiKorea)"),
+
+    dict(id="p305", topic="status", kind="grounded",
+        question="လက်ရှိဗီဇာအမျိုးအစားနဲ့ မကိုက်ညီတဲ့ လုပ်ငန်းလုပ်ချင်ရင် ဘာလုပ်ရမလဲ။",
+        context="[hikorea_184] Foreigners must receive permission to change of status of their "
+                "stay if they want to participate in new activities which is not relevant or "
+                "permitted for current status. General Principles: As a general rule, foreigners "
+                "seeking to participate in activities not permitted under their current status must "
+                "first depart from Korea, obtain a new status, then re-enter Korea. However, should "
+                "it be possible to meet the requirements for the new status without having to "
+                "depart from Korea, limited change of status can be made upon passing a rigid "
+                "examination.",
+        answer="လက်ရှိ ဗီဇာအမျိုးအစားနှင့် မကိုက်ညီသော လုပ်ငန်းလုပ်ရန် 체류자격 변경허가 "
+               "(နေထိုင်ခွင့် အဆင့် ပြောင်းလဲခွင့်) ကို ရယူရပါမည်။ ယေဘုယျအားဖြင့် ကိုရီးယားမှ "
+               "ပထမဆုံး ထွက်ခွာပြီး၊ လိုအပ်သော ဗီဇာအသစ်ကို ရယူပြီးမှ ပြန်ဝင်ရပါမည်။ သို့သော် "
+               "ကိုရီးယားမှ ထွက်ခွာစရာမလိုဘဲ ဗီဇာအသစ်၏ လိုအပ်ချက်များ ပြည့်မီနိုင်ပါက ပြင်းထန်သော "
+               "စစ်ဆေးမှု အောင်မြင်ပြီး ကန့်သတ်ချက်ဖြင့် အဆင့်ပြောင်းခွင့် ရနိုင်ပါသည်။",
+        cite="hikorea_184 — Change of Status of Stay (HiKorea)"),
+
+    dict(id="p306", topic="status", kind="grounded",
+        question="ကိုရီးယားမှာ ဖွားမြင်တဲ့ ကလေးအတွက် ဘယ်နှစ်ရက်အတွင်း နေထိုင်ခွင့်အဆင့် "
+                 "လျှောက်ရမလဲ။",
+        context="[hikorea_191] Application Period: Applicant must apply within 60 days of "
+                "whatever incident that required him/her to apply for the change. Newborn child "
+                "born in Korea must apply within 90 days.",
+        answer="ကိုရီးယားနိုင်ငံတွင် ဖွားမြင်သော ကလေးအတွက် **၉၀ ရက်**အတွင်း 체류자격 부여 "
+               "(နေထိုင်ခွင့်အဆင့် ချထားပေးရန်) လျှောက်ထားရပါမည်။ (အခြား အခြေအနေများအတွက် "
+               "ယေဘုယျအားဖြင့် ၆၀ ရက်အတွင်း လျှောက်ထားရပါသည်။)",
+        cite="hikorea_191 — Granting Status of Stay (HiKorea)"),
+
+    dict(id="p307", topic="reentry", kind="grounded",
+        question="၁ နှစ်ထက် မပိုတဲ့ ခရီးအတွက် ကိုရီးယားက ထွက်ခွာရင် ပြန်ဝင်ခွင့် သီးသန့် "
+                 "လျှောက်ထားစရာ လိုလား။",
+        context="[hikorea_7203] Persons Exempted from Re-entry Permit: Registered Foreign "
+                "Resident status holders (a broad range covering most registered long-term "
+                "statuses) are exempted from the Re-Entry Permit and will be allowed to re-enter "
+                "the ROK within 1 year from the date of departure, without obtaining a Re-entry "
+                "Permit.",
+        answer="အများစုအတွက် မလိုအပ်ပါ။ မှတ်ပုံတင်ထားသော နိုင်ငံခြားသား နေထိုင်သူ အများစုသည် "
+               "ထွက်ခွာပြီး **၁ နှစ်**အတွင်း ပြန်ဝင်ပါက 재입국허가 (ပြန်လည်ဝင်ရောက်ခွင့်) "
+               "မလိုအပ်ဘဲ ကင်းလွတ်ခွင့် ရရှိပါသည် (နေထိုင်ခွင့် သက်တမ်းအတွင်း ဖြစ်ရမည်)။ "
+               "သင့်ဗီဇာအမျိုးအစား ဤအုပ်စုတွင် အကျုံးဝင်သည်ကို 고용센터 (သို့) "
+               "출입국관리사무소 တွင် အတည်ပြုပါ။",
+        cite="hikorea_7203 — Re-entry Permit (Multiple) (HiKorea)"),
+
+    dict(id="p308", topic="reentry", kind="grounded",
+        question="၁ နှစ်ကျော်ပြီး ၂ နှစ်အောက် ပြင်ပမှာ နေဦးမယ်ဆိုရင် ဘာလုပ်ရမလဲ။",
+        context="[hikorea_7203] Persons required to apply for Multiple Re-entry Permit: Registered "
+                "foreigners should apply for a multiple Re-entry Permit to re-enter the ROK after "
+                "spending for more than 1 year and up to 2 years abroad from the date of departure.",
+        answer="၁ နှစ်ကျော်ပြီး ၂ နှစ်အထိ ပြင်ပတွင် နေထိုင်မည်ဆိုပါက 복수 재입국허가 (Multiple "
+               "Re-entry Permit) ကို ကြိုတင် လျှောက်ထားရပါမည်။",
+        cite="hikorea_7203 — Re-entry Permit (Multiple) (HiKorea)"),
+
+    dict(id="p309", topic="reentry", kind="grounded",
+        question="ရေရှည်နေထိုင်ခွင့် (F-5) ရှိရင် ပြန်ဝင်ခွင့် ဘယ်လောက်ကြာကြာ ရနိုင်လဲ။",
+        context="[hikorea_7203] Permanent Resident (F-5): For re-entry within 2 years from the "
+                "date of departure — exempted from Re-entry Permit.",
+        answer="ရေရှည်နေထိုင်ခွင့် (F-5) ရှိသူများအတွက်၊ ထွက်ခွာသည့်နေ့မှစ၍ **၂ နှစ်**အတွင်း "
+               "ပြန်ဝင်ပါက ပြန်လည်ဝင်ရောက်ခွင့် (재입국허가) မလိုအပ်ပါ။",
+        cite="hikorea_7203 — Re-entry Permit (Multiple) (HiKorea)"),
+
+    dict(id="p310", topic="stay_violation", kind="grounded",
+        question="ပြည်နှင်ဒဏ်အမိန့် ရရင် ကန့်ကွက်လို့ရလား။",
+        context="[hikorea_225] Objections to a Deportation Order: If a suspect intends to object "
+                "to a deportation order, the suspect may file a written objection within seven days "
+                "from the day he/she receives the written order of deportation.",
+        answer="ဟုတ်ကဲ့၊ ကန့်ကွက်လို့ရပါသည်။ ပြည်နှင်ဒဏ် အမိန့်စာ လက်ခံရရှိသည့်နေ့မှစ၍ "
+               "**၇ ရက်**အတွင်း စာဖြင့် ကန့်ကွက်လွှာ (written objection) တင်သွင်းနိုင်ပါသည်။",
+        cite="hikorea_225 — Decision on Immigration Offender (HiKorea)"),
+
+    dict(id="p311", topic="stay_violation", kind="grounded",
+        question="မှတ်ပုံတင်ခြင်း မလုပ်ဘဲနေရင် ပြည်နှင်ဒဏ်ခံရနိုင်လား။",
+        context="[hikorea_225] Deportation subjects — Foreigner who is subject to Article 46 (1) "
+                "of the Immigration Act: ... 12. A person who violates the obligation to file for "
+                "alien registration under Article 31.",
+        answer="ဟုတ်ကဲ့၊ ခံရနိုင်ပါသည်။ 출입국관리법 ပုဒ်မ ၃၁ (Article 31) အရ မှတ်ပုံတင်ရန် "
+               "တာဝန်ကို ချိုးဖောက်ခြင်းသည် ပြည်နှင်ဒဏ် (Deportation) ချမှတ်နိုင်သည့် "
+               "အကြောင်းရင်းများထဲတွင် ပါဝင်ပါသည်။ ထို့ကြောင့် သတ်မှတ်ကာလအတွင်း မှတ်ပုံတင်ခြင်းသည် "
+               "အလွန်အရေးကြီးပါသည်။",
+        cite="hikorea_225 — Decision on Immigration Offender (HiKorea)"),
+
+    dict(id="p312", topic="workplace_change", kind="refusal",
+        question="ဗီဇာပြောင်းရန် လျှောက်ငြင်းခံရရင် ဘယ်လောက်ကြာအောင် ထပ်မလျှောက်ရဘူးလဲ။",
+        context="[hikorea_184] Describes the general status-change procedure and principle; does "
+                "not state a waiting period after a denied application.",
+        answer=REFUSAL,
+        cite=None),
+
+    dict(id="p313", topic="insurance", kind="refusal",
+        question="ကလေးမွေးရင် ကလေးအတွက် ကျန်းမာရေးအာမခံ အလိုအလျောက်ဝင်လား။",
+        context="[hikorea_191] Covers status-of-stay grant for a newborn; does not address health "
+                "insurance enrollment.",
+        answer=REFUSAL,
+        cite=None),
 ]
 
 
