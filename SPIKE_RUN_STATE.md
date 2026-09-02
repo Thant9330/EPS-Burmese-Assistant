@@ -7,14 +7,26 @@ forces fp32 for gemma4, so E2B loaded *larger* than 9B in 4-bit: 7.45GB vs
 `notebooks/spike_compare_base_models.ipynb` now only runs 9B. Bug 1 (E2B's
 `text=` keyword crash) is moot and no longer needs fixing.
 
-Status: **Bug 2 is fixed — 9B trains cleanly. Bug 3 (generation) is still
-broken and is deeper than first thought** — the eos/pad-token-id hypothesis
-was tested with diagnostics and ruled out; the model's raw next-token
-predictions are themselves degenerate (immediate EOS before training, endless
-newline after). See Bug 3 below for the full diagnostic trail and three
-remaining hypotheses. **The spike has not yet met its actual goal** (confirm
-the base model visibly fails and LoRA visibly fixes it in Burmese) and
-Phase 3 should not start until this is resolved.
+Status: **Bug 2 fixed. Bug 3 root cause found and fixed: Unsloth's generation
+path is broken on this stack, not the model.** Training via Unsloth works
+correctly (confirmed twice). Generation via `FastLanguageModel`/Unsloth
+produces garbage regardless of prompt, template, or token config — proven by
+a clean-kernel test with plain `transformers`+`bitsandbytes` (Unsloth never
+imported) generating perfectly coherent English on the identical checkpoint.
+**Practical fix: train with Unsloth, generate/evaluate with plain
+`transformers`+`peft` in a separate process** — Unsloth monkeypatches
+`transformers` process-wide and irreversibly, so the two can't share a
+kernel. See Bug 3 for the full trail.
+
+**New finding that matters more than the bug: with generation actually
+working, the untrained base model already produces decent, grounded,
+on-topic Burmese** on the one seed example tested — which cuts against the
+project's founding premise that the base model "visibly fails" at this task.
+The one 30-step toy LoRA adapter trained so far **makes output worse, not
+better** (collapses to near-empty output) — almost certainly because 30 steps
+on 16 examples is far too little/unstable, not because the direction is
+wrong. **This needs your judgment as the native-Burmese reader before Phase 3
+decisions are finalized** — see "What this means for the project" below.
 
 ## Environment (confirmed working)
 
@@ -94,82 +106,115 @@ training loop is healthy on this stack.
 The fix is now baked into the notebook (`notebooks/spike_compare_base_models.ipynb`,
 cell after the install cell) so it doesn't need rediscovering.
 
-## Bug 3 — generation returns unusable output (STILL NOT fixed — deeper than token ids)
+## Bug 3 — generation returns unusable output — ROOT CAUSE FOUND (2026-09-02)
 
-Both BEFORE and AFTER generation on the two held-out questions fail, in two
-different ways:
+Both BEFORE and AFTER generation on the two held-out questions initially
+failed, in two different ways: empty string before training, 220 repeated
+newline characters after. Investigation ruled out, in order:
+
+1. **Wrong eos/pad ids** — `generate()` was rewritten to read
+   `model.generation_config.eos_token_id` fresh at call time and to fix the
+   `tok.pad_token_id or tok.eos_token_id` bug (breaks when `pad_token_id==0`,
+   which it legitimately is here). Diagnostics confirmed ids were read
+   correctly (`eos_ids=[1,107]`, `pad_id=0`) — the degenerate output
+   persisted regardless, proving this wasn't the cause.
+2. **Prompt/template mismatch** — printed the literal rendered prompt text.
+   It's textbook-correct Gemma chat format: `<bos><start_of_turn>user\n...
+   <end_of_turn>\n<start_of_turn>model\n`, no double-BOS, correct
+   structure. Not the cause either.
+3. **Fundamentally broken model/quantization** — tested a trivial prompt
+   ("Hello, how are you?") on the loaded model: greedy decoding gave
+   immediate EOS (identical symptom), sampled decoding gave pure gibberish
+   (random tokens across scripts, glitch text). But training loss had
+   decreased sensibly (17.77→9.19), meaning the model's forward pass
+   produces meaningful logits during training — so the problem is specific
+   to the **inference/`generate()`** code path, not the weights.
+4. **Confirmed: it's Unsloth's generation path, not the model.** Attempting
+   to bypass `FastLanguageModel.for_inference()` by calling `.eval()` +
+   `.generate()` directly didn't help — because Unsloth monkeypatches
+   `transformers`' `Gemma2Model.forward` **globally and process-wide** the
+   moment `import unsloth` runs, regardless of how a model is later loaded.
+   Confirmed by attempting a "plain" `AutoModelForCausalLM.from_pretrained`
+   load in the *same* (already-`unsloth`-imported) kernel — it still routed
+   through Unsloth's patched `LlamaModel_fast_forward` and crashed with
+   `AttributeError: 'Gemma2Model' object has no attribute 'max_seq_length'`
+   (an attribute only `FastLanguageModel`'s loader sets). **Decisive test**:
+   restarted the Colab kernel (`os.kill(os.getpid(), 9)` — packages and
+   `spike_seed.jsonl` survive), and in that fresh kernel — `unsloth` never
+   imported — loaded the identical checkpoint via plain
+   `transformers.AutoModelForCausalLM` + `BitsAndBytesConfig(load_in_4bit=True)`
+   and generated on the same trivial prompt:
+
+   ```
+   CLEAN (no unsloth ever imported) greedy decoded:
+   "I am an AI, so I don't have feelings, but I'm here and ready to assist you!"
+   ```
+
+   Perfectly coherent. **The checkpoint, the 4-bit quantization, and the
+   prompt were never the problem — Unsloth 2026.8.22's Gemma2
+   fast-generation path is broken on this T4/legacy-tokenizer setup.**
+
+**Practical fix — train and generate in separate processes.** Since Unsloth's
+patch is global and irreversible within a process, training (fast, use
+Unsloth, confirmed working) and generation/evaluation (must avoid Unsloth's
+patch entirely) cannot coexist in one kernel. Workflow going forward:
+1. Train with Unsloth as before; `SFTTrainer` already saves the LoRA adapter
+   to `out/checkpoint-N` on disk.
+2. In a **separate kernel that never imports `unsloth`**, load the base model
+   via plain `transformers` + `BitsAndBytesConfig`, then apply the adapter
+   with `peft.PeftModel.from_pretrained(base_model, "out/checkpoint-N")`, and
+   generate from there. This applies to Phase 4 (baseline eval) and Phase 6
+   (final eval) too — both need this clean generation path, not Unsloth's.
+
+## What this means for the project — needs your judgment
+
+With generation actually working, real BEFORE/AFTER output for held-out Q1
+(grounded, about 출국만기보험/departure guarantee insurance) and Q2 (refusal,
+about becoming a Korean citizen):
 
 ```
---- BEFORE training ---
-[ 0 ] ''
-[ 1 ] ''
---- AFTER training ---
-[ 0 ] '\n\n\n\n\n...' (220 newline characters, no other content)
-[ 1 ] '\n\n\n\n\n...' (220 newline characters, no other content)
+=== BEFORE (base model, no adapter) ===
+[Q1] ထွက်ခွာချိန် အာမခံ (출국만기보험) ဆိုသည်မှာ ကော်ရီးယား လုပ်ငန်းမှ ပြန်လည်ထွက်ခွာသော
+     အလုပ်သမားများအတွက် ကာကွယ်ရေး စီမံကိန်း တစ်ခုဖြစ်သည်။ ဤအာမခံ စီမံကိန်းသည်
+     လုပ်ငန်းရှင်များ ကြိုးစားရမည့် စည်းမျဉ်းများ ပါဝင်သည်။
+     (EPS 법률 제13조에 따라 보험 정책 또는 신탁 증서를 구매해야 하는 고용주는 다음
+     요건을 모두 충족해야 합니다. - EPS 법률 제12... [cut off at max_new_tokens=220]
+[Q2] အဆိုပါ ပညာရေး ပြည်သူ့ လုပ်ငန်းမှာ ကိုရီးယား နိုင်ငံသား ဖြစ်လာရန် နည်းလမ်းအကြောင်း
+     မရှိပါ။ [i.e. roughly "there's no method described in this material for
+     becoming a Korean citizen" - an appropriate-shaped refusal]
+
+=== AFTER (base + 30-step toy LoRA adapter) ===
+[Q1] " အ" then the model produces nothing further of substance (pads out to
+     max_new_tokens without stopping)
+[Q2] " အ" then same collapse
 ```
 
-**First hypothesis (wrong eos/pad ids) — tested and ruled out.** `generate()`
-was rewritten to read `model.generation_config.eos_token_id` fresh at call
-time (not the tokenizer's possibly-stale value) and to fix the
-`tok.pad_token_id or tok.eos_token_id` bug (breaks when `pad_token_id==0`,
-since `0` is falsy in Python — confirmed real: `tok.pad_token_id` really is
-`0` here). Diagnostic prints added to every `generate()` call confirm the ids
-are now read correctly:
+**Two things are true at once, and both matter:**
+- The **base model already produces grounded, on-topic Burmese** with a real
+  legal citation on Q1, and an appropriately-shaped refusal on Q2 — this cuts
+  against the plan's founding premise ("the base model visibly fails at
+  Burmese, that's the measurable delta"). It's one example, greedy-decoded,
+  not a rigorous eval, but it's a real data point that should have been
+  visible from Phase 0/2 and wasn't, because generation was broken until now.
+- The **toy 30-step LoRA (16 examples, `lr=2e-4`) makes output worse, not
+  better** — collapses to a single character. `final_loss` was still ~9.19,
+  very high — this reads as **severely undertrained/unstable**, not as
+  evidence the *approach* is wrong. The real Phase 3 dataset (800-1500
+  examples, more epochs, presumably a saner LR schedule) is a completely
+  different regime from this throwaway spike config, so this collapse
+  doesn't predict what a real training run would do.
 
-```
-tok bos/eos/pad ids: 2 1 0
-model.generation_config.eos_token_id (at load): [1, 107]
-    [diag] eos_ids= [1, 107] pad_id= 0 gen_len= 1 gen_ids[:15]= [1]      <- BEFORE, both calls
-model.generation_config.eos_token_id (post-trainer): [1, 107]
-    [diag] eos_ids= [1, 1, 107] pad_id= 0 gen_len= 220 gen_ids[:15]= [108]*15   <- AFTER, both calls
-```
-
-**This proves the real behavior, not a code bug:**
-- **BEFORE:** the model's very first generated token *is* `1` (a real member
-  of `eos_ids`) — `gen_len=1`. The untrained base model is correctly
-  recognizing this exact prompt as "already over" and stopping immediately.
-  `generate()` is working correctly; the model + prompt combination produces
-  a 1-token (immediate-EOS) response.
-- **AFTER:** the model outputs token `108` (`\n`) 220 times straight —
-  `108` is *not* in `eos_ids`, so it never stops on its own, hence
-  `gen_len=220` (hit `max_new_tokens`). Not an eos-detection bug either —
-  the model just never predicts anything but newline.
-
-So the root cause is upstream of `generate()` — most likely one of:
-1. **Prompt/template mismatch.** `generate()` renders only a single "user"
-   turn via `apply_chat_template(..., add_generation_prompt=True)`, while the
-   training data (`build_text()`) renders a full user+assistant 2-turn
-   conversation through the *same* template but without
-   `add_generation_prompt`. Unsloth logs "We found double BOS tokens - we
-   shall remove one automatically" for the **training** text specifically
-   (not generation) — meaning `build_text()`'s manually-rendered text plus
-   the trainer's own default tokenization already double up on `<bos>`, only
-   caught for the train path. Worth rendering and printing the literal
-   `text` string fed to `generate()` and to `build_text()` side by side to
-   check they actually agree on structure past the BOS handling.
-2. **Severely undertrained LoRA.** `final_loss=12.2985` and even step-30 loss
-   ~9.19 is very high for cross-entropy — no sign of the model producing
-   coherent output at all. 30 steps on 16 examples (effective batch 4, so
-   ~7.5 epochs) at `lr=2e-4`, `r=16` may simply not be enough to move the
-   model off a degenerate mode once it's in one, especially for a task this
-   far from the base model's native behavior. This is a real possibility
-   independent of (1).
-3. `aisingapore/Gemma-SEA-LION-v3-9B-IT` loaded **"as a legacy tokenizer"**
-   per Unsloth's own log line — worth checking if that legacy path handles
-   `apply_chat_template` differently than the fast tokenizer would, which
-   could explain a malformed prompt underlying both (1) and the BEFORE
-   immediate-stop behavior.
-
-**Not yet tried:**
-1. Print the literal rendered `text` string (not token ids) for one held-out
-   question, both from `generate()`'s path and from `build_text()`'s path,
-   and diff them by eye.
-2. Try generation with `parts=True` (the "typed content" format) even though
-   `needs_parts()` picked `False`, in case the probe itself is unreliable on
-   this legacy-tokenizer path.
-3. If (1)/(2) don't explain it, test whether more steps / lower LR fixes the
-   post-training degeneracy — i.e. rule out "just needs more training" before
-   assuming a template bug.
+**Recommended next step:** you read the BEFORE Burmese above yourself (no
+metric substitutes for a native reader, per the project's own rule) and judge
+whether it's actually good — check the Korean-term handling, whether the
+citation is genuine or plausible-sounding hallucination, whether the answer
+is fully grounded in context or drifting. If BEFORE already looks solid, the
+project's core premise needs re-examining before Phase 3 (maybe the
+measurable gain is elsewhere: consistency at scale, refusal calibration,
+Korean-term glossing format, not raw "can it answer at all"). If BEFORE has
+real problems a fluent reader would catch, the premise still holds and it's
+safe to continue toward Phase 3, treating this specific 30-step AFTER
+collapse as "config needs tuning" rather than "approach is broken."
 
 ## Operational notes for the next session
 
@@ -188,16 +233,20 @@ So the root cause is upstream of `generate()` — most likely one of:
 
 ## Next actions, in order
 
-1. Print the literal rendered prompt `text` (not ids) from both `generate()`
-   and `build_text()` for the same held-out question, and diff by eye —
-   cheapest way to catch a template mismatch, and doesn't require a full
-   train run (only a model load, ~90-370s).
-2. If templates look fine, retry generation with `parts=True` to rule out a
-   bad `needs_parts()` probe on this legacy-tokenizer path.
-3. If still stuck, treat it as "undertrained, not broken" — bump `STEPS`
-   (e.g. 100) and/or lower `learning_rate`, re-run, and see if AFTER output
-   stops being degenerate. This doesn't require solving (1)/(2) first, so it
-   can be tried in parallel or first if it's cheaper to just try.
-4. Once generation produces real text: read the BEFORE/AFTER Burmese and
-   judge it (native-reader call, no metric substitutes) — only then is the
-   spike's actual goal met and Phase 3 safe to start.
+1. **You read the BEFORE Burmese samples above and judge them** — this is the
+   actual blocking decision now, not a technical bug.
+2. Depending on your read: either accept the premise needs adjusting (base
+   model is already decent; figure out what the real measurable gain from
+   fine-tuning should be before writing 800-1500 examples aimed at the wrong
+   target), or confirm the premise holds and proceed.
+3. If proceeding: retrain with a saner config (more steps, e.g. 100-300;
+   consider a lower `learning_rate`, e.g. `1e-4`) using the same
+   train-with-Unsloth pipeline, and re-evaluate using the clean
+   `transformers`+`peft` generation pipeline (never in the same kernel as the
+   training import). Update `notebooks/spike_compare_base_models.ipynb`
+   to formally split into a training cell (Unsloth) and a separate
+   evaluation cell/notebook (plain transformers + peft), since the two must
+   never share a kernel.
+4. Carry the clean-generation requirement forward into Phase 4 (baseline
+   eval) and Phase 6 (final eval) planning — both need this same
+   Unsloth-free generation pipeline.
