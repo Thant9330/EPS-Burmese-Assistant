@@ -675,6 +675,68 @@ ROWS = [
                 "insurance enrollment.",
         answer=REFUSAL,
         cite=None),
+
+    # --- Round 5 (2026-09-02): wages - hand-verified against labor_standards_act_eng
+    # Articles 23, 28, 60. Article 16 (contract-term cap) was found but its own text
+    # flags it as a provision with a since-lapsed effective date, so treated as
+    # unconfirmed rather than asserted.
+    dict(id="p401", topic="wages", kind="grounded",
+        question="၁ နှစ်ကို အခစားရက် ဘယ်နှစ်ရက် ရနိုင်လဲ။",
+        context="[labor_standards_act_eng] Article 60 (Annual Paid Leave) (1) Every employer shall "
+                "grant any employee who has worked not less than 80 percent of one year a paid "
+                "leave of 15 days.",
+        answer="근로기준법 (Labor Standards Act) ပုဒ်မ ၆၀(၁) (Article 60(1)) အရ၊ ၁ နှစ်၏ ၈၀%ထက် "
+               "မနည်း အလုပ်လုပ်ခဲ့ပါက အခစားရက် **၁၅ ရက်** ရပါမည်။",
+        cite="labor_standards_act_eng — Labor Standards Act, Article 60(1)"),
+
+    dict(id="p402", topic="wages", kind="grounded",
+        question="၁ နှစ် မပြည့်သေးရင် အခစားရက် ရသေးလား။",
+        context="[labor_standards_act_eng] Article 60 (2) Every employer shall grant any employee "
+                "who has continuously worked for less than one year or who has worked less than 80 "
+                "percent of one year one paid-leave day for each month during which he or she has "
+                "continuously worked.",
+        answer="ဟုတ်ကဲ့၊ ရပါသည်။ ၁ နှစ်မပြည့်သေးသော (သို့) ၈၀%ထက် နည်းသော အလုပ်သမားများအတွက်၊ "
+               "ဆက်တိုက် အလုပ်လုပ်ခဲ့သည့် လတိုင်းအတွက် **၁ ရက်စီ** အခစားရက် ရပါသည် — 근로기준법 "
+               "ပုဒ်မ ၆၀(၂) (Article 60(2))။",
+        cite="labor_standards_act_eng — Labor Standards Act, Article 60(2)"),
+
+    dict(id="p403", topic="wages", kind="grounded",
+        question="အကြောင်းမဲ့ အလုပ်ထုတ်ခံရရင် ဘာလုပ်ရမလဲ။",
+        context="[labor_standards_act_eng] Article 23 (1) An employer shall not, without "
+                "justifiable cause, dismiss ... an employee. Article 28 (1) When an employee is "
+                "subjected by the employer to any unfair dismissal, he or she may request a remedy "
+                "therefor from a labor relations commission. (2) A request for remedy ... shall be "
+                "made within three months from the date of the unfair dismissal.",
+        answer="근로기준법 ပုဒ်မ ၂၃ (Article 23) အရ၊ အလုပ်ရှင်သည် တရားဝင် အကြောင်းပြချက် "
+               "မရှိဘဲ အလုပ်ထုတ်ခြင်း (unfair dismissal) မပြုလုပ်ရပါ။ အကြောင်းမဲ့ ခံရပါက ပုဒ်မ "
+               "၂၈ (Article 28) အရ၊ ပြစ်ဒဏ် လျော်ကြေးရလိုမှု လျှောက်လွှာကို 노동위원회 (Labor "
+               "Relations Commission) သို့ **၃ လ**အတွင်း တင်သွင်းနိုင်ပါသည်။",
+        cite="labor_standards_act_eng — Labor Standards Act, Articles 23 and 28"),
+
+    dict(id="p404", topic="wages", kind="refusal",
+        question="အလုပ်စာချုပ် တစ်ခုတည်းနဲ့ အများဆုံး ဘယ်နှစ်နှစ် ချုပ်နိုင်လဲ။",
+        context="[labor_standards_act_eng] Article 16 (Term of Contract) states a 1-year cap in "
+                "general, but the retrieved text itself notes this Article's amended provisions "
+                "were only effective until June 30, 2007 — meaning the current rule cannot be "
+                "confirmed from this text alone.",
+        answer=REFUSAL,
+        cite=None),
+
+    dict(id="p405", topic="wages", kind="refusal",
+        question="အလုပ်ထွက်ရင် ထွက်ခွာခြင်း လုပ်ခ (severance pay) ဘယ်လောက် ရနိုင်လဲ။",
+        context="[labor_standards_act_eng] Covers dismissal, leave, and working-hours rules; "
+                "severance pay is governed by a separate Act (Guarantee of Workers' Retirement "
+                "Benefits Act) not in this corpus.",
+        answer=REFUSAL,
+        cite=None),
+
+    dict(id="p406", topic="wages", kind="refusal",
+        question="အလုပ်ရှင်က အလုပ်ထုတ်ခင် ဘယ်နှစ်ရက်အလို ကြိုတင်အသိပေးရမလဲ။",
+        context="[labor_standards_act_eng] Article 26/27 cover dismissal notice and its exceptions; "
+                "the specific advance-notice day count was not captured cleanly in the retrieved "
+                "chunk text.",
+        answer=REFUSAL,
+        cite=None),
 ]
 
 
