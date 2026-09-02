@@ -18,6 +18,9 @@ data/processed/
 *.jsonl
 !data/samples/*.jsonl
 
+# raw external-AI dataset drafts (already verified + merged into data/samples/)
+q and a/
+
 # --- Python ---
 __pycache__/
 *.py[cod]

@@ -104,6 +104,38 @@
       "min_chars": 2000
     },
     {
+      "id": "retirement_benefits_act_eng",
+      "title": "Guarantee of Workers' Retirement Benefits Act",
+      "url": "https://www.law.go.kr/LSW/engLsInfoR.do?lsiSeq=86562",
+      "lang": "en",
+      "authority": "Korea Ministry of Government Legislation (law.go.kr)",
+      "doc_type": "statute",
+      "topics": [
+        "severance",
+        "retirement_allowance",
+        "wages"
+      ],
+      "license_note": "Unofficial English translation. Not legally effective; the Korean original governs.",
+      "extractor": "statute",
+      "min_chars": 2000
+    },
+    {
+      "id": "industrial_accident_act_eng",
+      "title": "Industrial Accident Compensation Insurance Act",
+      "url": "https://www.law.go.kr/LSW/engLsInfoR.do?lsiSeq=198265",
+      "lang": "en",
+      "authority": "Korea Ministry of Government Legislation (law.go.kr)",
+      "doc_type": "statute",
+      "topics": [
+        "industrial_accident",
+        "insurance",
+        "compensation"
+      ],
+      "license_note": "Unofficial English translation. Not legally effective; the Korean original governs.",
+      "extractor": "statute",
+      "min_chars": 2000
+    },
+    {
       "id": "labor_standards_act_eng",
       "title": "Labor Standards Act",
       "url": "https://www.law.go.kr/LSW/engLsInfoR.do?lsiSeq=232199",
