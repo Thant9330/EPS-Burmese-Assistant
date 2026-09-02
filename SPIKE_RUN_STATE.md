@@ -1,4 +1,4 @@
-# Training spike — run state (updated 2026-09-02)
+# Training spike — run state (updated 2026-09-03)
 
 **Decision: base model locked to SEA-LION v3 9B.** E2B is dropped from the
 comparison — its tokenizer advantage doesn't survive a bf16-less T4 (Unsloth
@@ -17,6 +17,42 @@ imported) generating perfectly coherent English on the identical checkpoint.
 `transformers`+`peft` in a separate process** — Unsloth monkeypatches
 `transformers` process-wide and irreversibly, so the two can't share a
 kernel. See Bug 3 for the full trail.
+
+## Bug 4 — trained adapter produces garbage via plain `PeftModel`, fixed by merging (2026-09-03)
+
+First real Phase 5/6 run on the full 572-row dataset (520 train / 50 held-out): training
+completed cleanly (390/390 steps, 3 epochs, loss 18.64 -> ~3.0, no NaN/Inf, healthy
+convergence, peak VRAM 7.88GB) and the adapter saved without error. But Phase 6 eval —
+`peft.PeftModel.from_pretrained(base_model, adapter_path)` on a plain-`transformers` +
+`bitsandbytes` 4-bit base (the exact clean-kernel recipe Bug 3 proved works for the base
+model alone) — produced the same total-breakdown symptom as Bug 3's Unsloth-generation
+garbage: repeated fragments across random scripts/languages ("Oficial.", "caso.", ".")
+on *every* held-out question, including a trivial English sanity prompt ("Hello, how are
+you?").
+
+**Ruled out, in order:**
+1. Adapter corruption during training - checked every tensor in `adapter_model.safetensors`
+   for NaN/Inf (none) and magnitude (norms 0.4-4.2, all sane, no explosion).
+2. Config mismatch - `adapter_config.json`'s `r`, `lora_alpha`, `target_modules`, and
+   `base_model_name_or_path` all matched the training config exactly.
+3. eos/pad token drift - `model.generation_config.eos_token_id` was `[1, 107]` both with
+   and without the adapter applied, matching the base model's own config.
+
+**Root cause: applying the adapter as a live `PeftModel` wrapper during `.generate()` is
+broken on this 4-bit-bnb + Gemma2 stack, even though the adapter itself is fine.**
+Confirmed by calling `model.merge_and_unload()` (folds the LoRA delta directly into the
+base weights instead of keeping it as a separate hooked module) right after loading the
+adapter, then generating on the same trivial prompt — coherent output, indistinguishable
+in quality from the base model's own spike-era response. `peft` even warns
+`"Merge lora module to 4-bit linear may get different generations due to rounding
+errors"` when you call it, which reads backwards from what actually happened here: *not*
+merging is what broke generation, not merging.
+
+**Practical fix, now baked into `notebooks/spike_compare_base_models.ipynb`'s Phase 6
+setup cell**: always call `.merge_and_unload()` on the `PeftModel` immediately after
+`from_pretrained`, before any `.generate()` call, in *any* clean (Unsloth-free) eval
+kernel. This applies to Phase 6 here and to any future eval of a saved adapter the same
+way.
 
 **New finding that matters more than the bug: with generation actually
 working, the untrained base model already produces decent, grounded,
