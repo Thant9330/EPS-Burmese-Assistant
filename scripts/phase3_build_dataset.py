@@ -737,10 +737,62 @@ ROWS = [
                 "chunk text.",
         answer=REFUSAL,
         cite=None),
+
+    # --- Round 6 (2026-09-02): contract_renewal, our weakest topic - closed by
+    # re-reading eps_act_eng Article 9(3)/(4) and Article 18 in full while
+    # researching sources for the external-AI prompt. Real, verified text, not
+    # a new source fetch - this was sitting in our own corpus the whole time.
+    dict(id="p601", topic="contract_renewal", kind="grounded",
+        question="အလုပ်စာချုပ် သက်တမ်းတိုးလို့ရလား။",
+        context="[eps_act_eng] Article 9 (Employment Contract) (3) An employer who has obtained an "
+                "employment permit under Article 8 and the relevant foreign worker may enter into or "
+                "renew an employment contract, by mutual agreement, for a term of up to the period "
+                "prescribed in Article 18. Article 18 (Limitation on Period of Service) Any foreign "
+                "worker may work as an employee within three years of entry into the Republic of Korea.",
+        answer="ဟုတ်ကဲ့၊ တိုးနိုင်ပါသည်။ 외국인고용법 ပုဒ်မ ၉(၃) (Article 9(3)) အရ အလုပ်ရှင်နှင့် "
+               "အလုပ်သမား **နှစ်ဦးသဘောတူညီပါက** အလုပ်စာချုပ်ကို သက်တမ်းတိုးနိုင်ပါသည်။ သို့သော် "
+               "ပုဒ်မ ၁၈ (Article 18) အရ ကိုရီးယားရောက်ရှိချိန်မှစ၍ **၃ နှစ်**ထက် မပိုစေရပါ။",
+        cite="eps_act_eng — Act on the Employment, etc. of Foreign Workers, Article 9(3) and Article 18"),
+
+    dict(id="p602", topic="contract_renewal", kind="grounded",
+        question="စာချုပ်တိုးဖို့ ဘယ်သူတွေ သဘောတူရမလဲ။ အလုပ်ရှင်တစ်ဦးတည်း ဆုံးဖြတ်လို့ရလား။",
+        context="[eps_act_eng] Article 9 (3) An employer ... and the relevant foreign worker may enter "
+                "into or renew an employment contract, by mutual agreement, for a term of up to the "
+                "period prescribed in Article 18.",
+        answer="မရပါ။ 외국인고용법 ပုဒ်မ ၉(၃) (Article 9(3)) အရ အလုပ်စာချုပ် သက်တမ်းတိုးရန် "
+               "**အလုပ်ရှင်နှင့် အလုပ်သမား နှစ်ဦးစလုံး** သဘောတူညီမှု လိုအပ်ပါသည်။ အလုပ်ရှင် "
+               "တစ်ဦးတည်း ဆုံးဖြတ်၍ မရပါ။",
+        cite="eps_act_eng — Act on the Employment, etc. of Foreign Workers, Article 9(3)"),
+
+    dict(id="p603", topic="contract_renewal", kind="grounded",
+        question="အလုပ်ခွင့်ပြုကာလ တိုးရင် စာချုပ်လည်း အလိုအလျောက် တိုးလား။",
+        context="[eps_act_eng] Article 9 (4) A foreign worker whose period of employment is extended "
+                "under Article 18-2 and the relevant employer may enter into an employment contract "
+                "for a term not exceeding the extended period of employment.",
+        answer="အလိုအလျောက် မဟုတ်ပါ။ 외국인고용법 ပုဒ်မ ၉(၄) (Article 9(4)) အရ၊ ပုဒ်မ ၁၈-၂ (Article "
+               "18-2) အရ အလုပ်ခွင့်ပြုကာလ တိုးလာသောအခါ၊ အလုပ်ရှင်နှင့် အလုပ်သမားသည် တိုးထားသော "
+               "ကာလအထိ **သီးခြား စာချုပ်တစ်ခု ထပ်မံချုပ်ဆို**ရပါသည် — အလိုအလျောက် ဆက်လက်တည်ရှိသည် "
+               "မဟုတ်ပါ။",
+        cite="eps_act_eng — Act on the Employment, etc. of Foreign Workers, Article 9(4)"),
+
+    dict(id="p604", topic="contract_renewal", kind="refusal",
+        question="စာချုပ်တိုးဖို့ လျှောက်ရင် ဘယ်စာရွက်တွေ လိုအပ်လဲ။",
+        context="[eps_act_eng] Article 9 states renewal requires mutual agreement and the standard "
+                "employment contract form, but does not list specific required documents for a "
+                "renewal application.",
+        answer=REFUSAL,
+        cite=None),
 ]
 
 
 def build():
+    # WARNING: this OVERWRITES data/samples/phase3_dataset.jsonl with ONLY the rows
+    # defined in ROWS below. Since the DeepSeek merge (scripts/phase3_merge_deepseek.py,
+    # ids d501+) and any manually-appended rows (e.g. ids p601+ appended directly, not
+    # via this script) are NOT in ROWS, re-running this script will DELETE them from the
+    # file. Do not run this after the DeepSeek merge without first copying ROWS-only
+    # output somewhere else, or changing this to append. As of 2026-09-02 the file has
+    # 264 rows total; ROWS below only accounts for the first ~65 (p001-p604).
     rows = []
     for r in ROWS:
         answer = r["answer"]
