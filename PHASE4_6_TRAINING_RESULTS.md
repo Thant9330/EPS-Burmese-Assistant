@@ -2,6 +2,15 @@
 
 **Run: 2026-09-03 · 572-row dataset (520 train / 50 held-out) · SEA-LION v3 9B QLoRA**
 
+> **RESOLVED (2026-09-03).** The conclusions in the "What we think is going on" and
+> "Next step" sections below are **wrong** and are kept only as a record of the
+> investigation. The real cause was not epochs, learning rate, or the dataset: Unsloth's
+> patched forward pass silently misaligned the logits by one position on this stack, so
+> the model was trained to predict the *previous* token. See
+> **[Root cause: Unsloth logit misalignment](#root-cause-unsloth-logit-misalignment)** at
+> the end of this document.
+
+
 ## What happened
 
 Ran the full pipeline for real for the first time: baseline eval (Phase 4), QLoRA
@@ -89,3 +98,105 @@ fixing it.
 Retrain with fewer epochs and/or a lower learning rate is the most likely fix, but that
 costs another ~65 min of free-tier GPU time (now on a second Google account after the
 first hit its quota) — not something to spend without confirming direction first.
+
+---
+
+# Root cause: Unsloth logit misalignment
+
+Found 2026-09-03, after the fix above (response-only loss masking) failed to stop the
+collapse and a second run reproduced it exactly.
+
+## The tell
+
+Training loss started at **18.76** on the first run and **19.29** on the second. With a
+256,000-token vocabulary, a model guessing uniformly at random scores `ln(256000) =
+12.45`. A loss of 19 is *worse than random* — the model was confidently wrong, which is
+not something hard data can cause. At step 0 the LoRA is initialised to zero, so that
+number describes the untouched base model, the same base model that writes fluent
+Burmese. It should have been ~1-3.
+
+That single arithmetic check is what turned the investigation around. It should have
+been applied to the first run's loss curve.
+
+## The measurement
+
+One real collated training example, run through both paths on the same machine, same
+`transformers 5.5.0`, same example, same 4-bit quantisation:
+
+| measurement | Unsloth | plain transformers |
+|---|---|---|
+| loss reported by the model | 14.72 (training logged ~19) | **1.297** |
+| loss recomputed by hand, standard shift | 221.35 | **1.297** (matches) |
+| loss recomputed by hand, no shift | 0.58 | 15.33 |
+| `argmax(logits[i]) == input_ids[i+1]` (correct) | **0.0%** | **58.7%** |
+| `argmax(logits[i]) == input_ids[i]` (copying) | **98.8%** | **0.0%** |
+| logit range | **-304 … 641** | **-29.9 … 28.1** |
+| `final_logit_softcapping` in config | 30.0 | 30.0 |
+
+The labels were verified correct in both paths (`labels[i] == input_ids[i]` at 100%),
+so the collator and the response-only masking were never at fault.
+
+## Two faults, both in Unsloth's patched forward
+
+1. **Logits shifted by one position.** Unsloth returns logits already offset, so the
+   loss function's standard shift becomes a *double* shift and every prediction is
+   compared against the wrong token. Printing predictions makes it unmistakable — the
+   model outputs the previous target every time, at 100% confidence:
+
+   ```
+    i    input[i]   input[i+1]   argmax(logits[i])
+   320   'ါ'        '်'          'ါ'
+   321   '်'        'မ'          '်'
+   322   'မ'        'ူ'          'မ'
+   ```
+
+2. **Gemma2 softcapping not applied.** `final_logit_softcapping=30.0` is present in the
+   config but logits reach 641. Uncapped logits make the softmax effectively one-hot,
+   which is why every prediction reads as 100.0%.
+
+The internal loss is wrong too (14.72 vs the correct 1.297), not merely the returned
+logits — so the **gradients were wrong**, not just the reported number.
+
+## Why this produced exactly the symptoms we saw
+
+Training optimised "given this context, emit the token that came before." That is a
+repetition machine by construction. It explains, without any further hypothesis:
+
+- the repetition-loop collapse on 100% of held-out questions
+- why it appeared from generated token 0 rather than accumulating
+- why it damaged general Burmese, not just the E-9 domain
+- why decoding-time repetition penalties made things worse
+- why scaling the adapter down to 50% "fixed" it — that scales down a corrupted update
+  toward the untouched base model, which is why quality also fell back to base level
+
+## What this invalidates
+
+- The λ-scaling conclusion ("adapter is over-trained, reduce LR") — wrong diagnosis.
+- The hyperparameter suspicion (epochs, learning rate, rank) — untested, since no run
+  ever had correct gradients.
+- The dataset suspicion. The v2 dataset cleanup (see `scripts/build_phase3_v2.py`) was
+  worth doing on its own merits, but it was not the cause: loss stayed at ~19 with the
+  cleaned data, and plain transformers scores **1.297** on the *uncleaned* data.
+
+## Standing check for future runs
+
+Before trusting any training run on this project, on one real collated example:
+
+1. `argmax(logits[i]) == input_ids[i+1]` must be high, and `== input_ids[i]` must be ~0%.
+2. The model's reported loss must match a hand-recomputed `cross_entropy` with the
+   standard shift.
+3. Logits must respect the model's `final_logit_softcapping`.
+4. The first logged training loss must be well under `ln(vocab_size)`.
+
+These are implemented as hard `assert` gates in the plain-transformers training cell, so
+a broken run stops before spending GPU time rather than after.
+
+## Consequence for the stack
+
+Training moves to **plain transformers + peft + TRL**, no Unsloth. Measured on a free T4
+with the 904-token worst-case example: 6.35 GB after model+LoRA, **10.72 GB peak** for a
+full forward/backward/optimizer step, 4.6 GB headroom. Slower than Unsloth but correct.
+
+Unsloth-specific workarounds recorded earlier in `SPIKE_RUN_STATE.md` (Bug 2's compiled-
+cache clear, Bug 3's separate-kernel rule for training vs generation) no longer apply.
+Bug 4's `merge_and_unload()` requirement is a peft/bitsandbytes issue and still stands.
