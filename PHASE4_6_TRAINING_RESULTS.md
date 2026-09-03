@@ -200,3 +200,112 @@ full forward/backward/optimizer step, 4.6 GB headroom. Slower than Unsloth but c
 Unsloth-specific workarounds recorded earlier in `SPIKE_RUN_STATE.md` (Bug 2's compiled-
 cache clear, Bug 3's separate-kernel rule for training vs generation) no longer apply.
 Bug 4's `merge_and_unload()` requirement is a peft/bitsandbytes issue and still stands.
+
+---
+
+# The successful run (2026-09-03, plain transformers)
+
+First training run on this project with a verified-correct forward pass, and the first
+where fine-tuning measurably beat the base model.
+
+## Second bug found: merging destroys the adapter on 4-bit weights
+
+After the Unsloth fix, a 6-model checkpoint sweep still showed BASE, `checkpoint-150` and
+`final` producing **byte-identical** output on 3 of 5 inspected questions. That is not a
+weak adapter, it is an adapter with no effect.
+
+Cause was `merge_and_unload()`. It folds the LoRA delta into 4-bit quantised weights,
+where the delta is smaller than the quantisation step and rounds away. peft warns about
+this (`Merge lora module to 4-bit linear may get different generations due to rounding
+errors`) and the warning should be treated as an error. Measured on one training example:
+
+| model | loss |
+|---|---|
+| base, no adapter | 1.314 |
+| adapter, **not** merged (`PeftModel`) | **0.078** |
+| adapter, merged | 1.235 — back to base level |
+
+Generation says the same thing. Unmerged produces the trained style, Korean term and
+citation format; merged produces base-model text.
+
+**This voids Bug 4.** The earlier rule "always merge before generating, unmerged adapters
+produce cross-script garbage" was diagnosed against the Unsloth-corrupted adapter. With a
+correctly trained adapter, unmerged generation is clean. Evaluate unmerged.
+
+It also invalidated the checkpoint sweep — every model in it was merged, so it compared
+the base model against itself, which is exactly why all the scores sat within noise.
+
+## Training run
+
+Plain transformers + peft + TRL, no Unsloth. Hard `assert` gates before training:
+logit alignment, reported-vs-recomputed loss agreement, softcap respected. Config
+otherwise unchanged from every previous attempt: r=16, alpha=32, dropout=0.0, all seven
+projections, batch 1 x grad-accum 4, 3 epochs, lr 1e-4, linear schedule, seed 0, fp16.
+Dataset was v2 (522 rows).
+
+Loss 0.932 -> 0.054 over 393 steps, ~76 min on a free T4. Peak VRAM 12.98 GB of 15.36.
+Eight checkpoints kept in `eps-burmese-checkpoints/plain-transformers-run/`.
+
+Memory note: `prepare_model_for_kbit_training` upcasts the 256k-vocab output layer to
+fp32 and pushes VRAM from 6.35 to 9.49 GB before training starts. Skipping it fits
+comfortably — 10.72 GB peak on the 904-token worst-case example.
+
+## Held-out results, base vs fine-tuned, unmerged
+
+12 held-out questions (9 grounded, 3 refusal), identical prompt and decoding, greedy,
+300 tokens, no repetition penalty:
+
+| | BASE | FINE-TUNED |
+|---|---|---|
+| repetition loops | 0/12 | 0/12 |
+| stopped naturally | 12/12 | 12/12 |
+| Devanagari intrusion | 0 | 0 |
+| cites a source | 4/9 | 4/9 |
+| keeps Korean terms | **0/4** | **3/4** |
+| refuses correctly | **2/3** | **3/3** |
+| mean length | 185 | 239 |
+
+Korean-term retention and refusal behaviour both improved; citation rate unchanged;
+stability fully intact at 3 epochs and loss 0.054 — the exact configuration that used to
+collapse completely.
+
+The project owner, as the native Burmese speaker and the designated language authority,
+read the side-by-side outputs and judged the fine-tuned Burmese natural and good. Base
+produced actual word errors the metrics do not catch, e.g. `ထိုင်ရမည်` ("must sit") where
+the answer needed "must purchase".
+
+Refusals now use the owner-written variants from `data/refusal_variants.txt` rather than
+the single memorised string, e.g. `မှားယွင်းသော သတင်းအချက်အလက်များ မပေးလိုပါသဖြင့် ...
+고용센터 သို့ ဆက်သွယ်ပေးပါ။`
+
+## Two accuracy problems the format now hides
+
+Fine-tuning taught the model to look authoritative. That was the goal, but it means
+errors now arrive wrapped in a trustworthy-looking format, which raises rather than
+lowers the stakes on accuracy:
+
+1. **`s012` contradicts itself.** Inline citation reads `ပုဒ်မ ၁၅ (Article 15)` while its
+   own source line says Article 22. Gold is Article 22.
+2. **`p312` routes to the wrong office.** A visa question sent to `고용센터` where gold
+   routes to `출입국관리사무소`. Only 11 of 54 refusals in the dataset are
+   immigration-routed, so the signal was too thin to learn.
+
+Both are dataset problems, not training problems.
+
+## Next session
+
+1. Full 50-question eval, unmerged, base vs fine-tuned (~15 min GPU). 12 questions is a
+   promising signal, not a result — only 4 of them test Korean terms and 3 test refusal.
+2. Strengthen article-number accuracy and immigration-routed refusals in the dataset.
+3. Decide whether `final` or an earlier checkpoint is the one to keep — the sweep that
+   was supposed to answer this was invalidated by the merge bug and needs re-running
+   unmerged.
+
+## Standing rules for this project
+
+- Train with plain transformers + peft + TRL. Not Unsloth on this stack.
+- Evaluate unmerged. Never `merge_and_unload()` into 4-bit weights.
+- Gate every training run on: logit alignment, reported-vs-recomputed loss agreement,
+  softcap respected, first logged loss well under `ln(vocab_size)` = 12.45.
+- Before trusting an adapter evaluation, confirm its loss on a training example is far
+  below the base model's. If they are close, the adapter is not reaching the forward pass.
