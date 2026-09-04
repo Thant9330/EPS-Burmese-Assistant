@@ -309,3 +309,107 @@ Both are dataset problems, not training problems.
   softcap respected, first logged loss well under `ln(vocab_size)` = 12.45.
 - Before trusting an adapter evaluation, confirm its loss on a training example is far
   below the base model's. If they are close, the adapter is not reaching the forward pass.
+
+---
+
+# Full 50-question held-out evaluation (2026-09-04)
+
+Base vs fine-tuned on all 50 held-out questions, identical prompt and decoding (greedy,
+300 tokens, no repetition penalty), adapter applied unmerged via `PeftModel`.
+
+Environment note: Colab had moved to `transformers 5.16.1` (from 5.5.0 the day before).
+Both pre-flight gates were re-run on the new version and passed with numbers identical to
+the previous day — logit alignment 58.8% next-token / 0.0% copying, logits within the ±30
+softcap, and adapter loss on a training row 1.314 -> 0.078. Good cross-version
+reproducibility, and the reason the gates are worth re-running rather than assuming.
+
+## Results
+
+| metric | BASE | TUNED |
+|---|---|---|
+| repetition loops | 1/50 | 1/50 |
+| stopped naturally | 44/50 | 44/50 |
+| Devanagari intrusion | 0 | 0 |
+| cites a source | 26/45 | **34/45** |
+| keeps Korean terms | 5/30 | **18/30** |
+| refuses correctly | 2/5 | **4/5** |
+| names the right office | 0/5 | **2/5** |
+| article number correct | 13/13 | 20/21 |
+| mean length | 213 | 252 |
+
+Every quality measure improved; nothing degraded. Korean-term retention went from 17% to
+60% and citation rate from 58% to 76%, both on usable sample sizes (30 and 45 rows).
+
+Article numbers need reading carefully: base cited an article 13 times and was right all
+13; tuned cited 21 times and was right 20. Tuned attempts citation far more often at
+marginally lower precision. The single miss is the known `s012` row.
+
+Stability is unchanged, and the one repetition loop appears in **base as well**, so it is
+base-model behaviour rather than fine-tuning damage.
+
+Refusal figures (2/5 -> 4/5, 0/5 -> 2/5) rest on only five questions and are directional
+only. That base never once names the correct office is still worth noting.
+
+## Where the fine-tuning actually helps
+
+`p003` — "where do I apply to change workplace?" Base invents an office that does not
+exist and then fabricates an explanation of it:
+
+```
+BASE : ... **ရပ်ကွက် လူမျိုးရင်း ဌာန** (Local Immigration Office) မှာ တင်သွင်းရမည်။
+       **မှတ်ချက်:** လူမျိုးရင်း ဌာန ဆိုသည်မှာ ကောရီးယား နိုင်ငံတွင်းရှိ လူမျိုးရင်း စီမံရေး အဖွဲ့ ဖြစ်သည်။
+TUNED: ... 출입국관리사무소 (လူဝင်မှုကြီးကြပ်ရေးရုံး) သို့ လျှောက်ထားရပါသည်။
+       ရင်းမြစ် — hikorea_189 — Permission to Change or Add Workplace
+```
+
+`p009` — overtime pay. Base writes `50/100` and glosses it in Burmese as *eighty percent*,
+a wrong number in a wage answer:
+
+```
+BASE : ... ပုံမှန် လစာ၏ 50/100 (ရှစ်ဆယ်ရာခိုင်နှုန်း) ကျော် ပေးရမည်ဖြစ်သည်။
+TUNED: 근로기준법 ပုဒ်မ ၅၆ (Article 56) အရ ... သာမန်လုပ်အားခ၏ ၅၀% (၅၀/၁၀၀) ထက် မနည်းသော ...
+```
+
+Refusals now use the owner-written variants instead of base's broken half-refusals:
+
+```
+BASE : [industrial_accident_decree_eng] တွင် တစ်နေ့တစ်လုံး ဆောင်ရွက်သူ အဖွဲ့အစည်းကို တင်ပြခြင်း မရှိဘူး။
+TUNED: မှားယွင်းသော သတင်းအချက်အလက်များ မပေးလိုပါသဖြင့် ... 고용센터 သို့ ဆက်သွယ်ပေးပါ။
+```
+
+## A methodology bug worth recording
+
+The first attempt at this evaluation produced a table where **every metric was identical
+between base and tuned, including mean length to the character**. Cause:
+
+```python
+ft = PeftModel.from_pretrained(base, ADAPTER)   # injects LoRA into `base` IN PLACE
+BASE_ROWS = run_all(base, "BASE")               # `base` now carries the adapter
+FT_ROWS   = run_all(ft,   "TUNED")
+```
+
+`PeftModel.from_pretrained` modifies the base model's modules in place, so `base` and
+`ft` are the same model. Confirmed by counting `LoraLayer` instances inside `base` (294,
+not 0) and by `base is ft.base_model.model` being True.
+
+This is the second time a comparison silently became model-vs-itself, after the 4-bit
+merge bug. The fix is `with ft.disable_adapter():` for the base pass, plus an assertion
+that the two output sets actually differ before anything is scored:
+
+```python
+same = sum(1 for a, b in zip(BASE_ROWS, FT_ROWS) if a["out"].strip() == b["out"].strip())
+assert same < 45, "still comparing a model against itself"
+```
+
+Identical aggregate metrics across two supposedly different models should be treated as a
+bug signal, not a finding.
+
+## Still open
+
+Both are dataset work, not training work:
+
+1. **Office routing, 2/5.** Only 11 of 54 refusals in training are routed to
+   `출입국관리사무소`; the rest go to `고용센터`, so the model defaults to the employment
+   centre even for visa questions.
+2. **One wrong article number** (`s012`), which cites Article 15 inline while its own
+   source line says Article 22.
