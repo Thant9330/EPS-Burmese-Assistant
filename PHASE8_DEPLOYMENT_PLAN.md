@@ -5,6 +5,25 @@ questions can be put in front of it before deciding on anything larger.
 
 **Decided:** Gradio on Hugging Face Spaces. Budget: free tier only.
 
+> **STATUS (2026-09-08): the premise below is wrong, and the app was built but not deployed.**
+>
+> This plan assumed free HF Spaces have no GPU, making a GGUF export the blocking step.
+> Both halves turned out to be false when actually tested:
+>
+> 1. **ZeroGPU exists** — NVIDIA RTX Pro 6000 Blackwell, 48 GB — which removes the need for
+>    a GGUF export entirely. The model runs as-is.
+> 2. **But hosting is PRO-gated.** Creating *any* Gradio Space returns
+>    `402 Payment Required: Static Spaces are free for everyone, but hosting Gradio and
+>    Docker Spaces on free cpu-basic requires a PRO subscription.` This applies on free CPU
+>    too, not just ZeroGPU.
+>
+> So the blocker is a $9/month subscription, not an 18 GB fp16 merge. The GGUF work
+> described below is unnecessary for this path.
+>
+> The complete application is preserved in [`space/`](space/) and deploys in minutes given
+> PRO or a community grant. The free alternative that does work is Colab with
+> `demo.launch(share=True)` — temporary, but no code changes needed.
+
 ## The constraint that shapes everything
 
 HF Spaces free tier is **2 vCPU / 16 GB RAM, no GPU**. The current serving path
