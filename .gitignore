@@ -18,6 +18,12 @@ data/processed/
 *.jsonl
 !data/samples/*.jsonl
 
+# Evaluation evidence: published so the results in README.md can be checked.
+# The corpus itself stays out - it is rebuilt from data/sources.json.
+!data/train/phase3_train_v2.jsonl
+!data/eval/phase4_holdout_v2.jsonl
+!data/eval/demo_log.jsonl
+
 # raw external-AI dataset drafts (already verified + merged into data/samples/)
 q and a/
 
