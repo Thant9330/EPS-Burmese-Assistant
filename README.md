@@ -230,16 +230,18 @@ caught this project twice.
 
 The phase documents are a chronological record, including the wrong turns.
 
-1. [`EPS_BURMESE_QLORA_PLAN.md`](EPS_BURMESE_QLORA_PLAN.md) — the original plan
-2. [`PHASE0_TOKENIZER_RESULTS.md`](PHASE0_TOKENIZER_RESULTS.md) — measuring before choosing
-3. [`PHASE1_CORPUS_RESULTS.md`](PHASE1_CORPUS_RESULTS.md) — corpus with provenance
-4. [`PHASE2_RETRIEVAL_RESULTS.md`](PHASE2_RETRIEVAL_RESULTS.md) — cross-lingual retrieval
-5. [`PHASE2B_CORPUS_GAP.md`](PHASE2B_CORPUS_GAP.md) — a corpus gap, and an eval that hid it
-6. [`PHASE3_FIRST_BATCH.md`](PHASE3_FIRST_BATCH.md), [`PHASE3_DEEPSEEK_MERGE.md`](PHASE3_DEEPSEEK_MERGE.md) — dataset construction
-7. [`PHASE4_6_TRAINING_RESULTS.md`](PHASE4_6_TRAINING_RESULTS.md) — **the main document**: the collapse, both bugs, the successful run
-8. [`PHASE7_END_TO_END.md`](PHASE7_END_TO_END.md) — evaluation with real retrieval
-9. [`PHASE8_DEPLOYMENT_PLAN.md`](PHASE8_DEPLOYMENT_PLAN.md) — deployment constraints
-10. [`SPIKE_RUN_STATE.md`](SPIKE_RUN_STATE.md) — earlier stack bugs and their fixes
+1. [`PHASE0_TOKENIZER_RESULTS.md`](PHASE0_TOKENIZER_RESULTS.md) — measuring before choosing
+2. [`PHASE1_CORPUS_RESULTS.md`](PHASE1_CORPUS_RESULTS.md) — corpus with provenance
+3. [`PHASE2_RETRIEVAL_RESULTS.md`](PHASE2_RETRIEVAL_RESULTS.md) — cross-lingual retrieval
+4. [`PHASE2B_CORPUS_GAP.md`](PHASE2B_CORPUS_GAP.md) — a corpus gap, and an eval that hid it
+5. [`PHASE3_FIRST_BATCH.md`](PHASE3_FIRST_BATCH.md), [`PHASE3_DEEPSEEK_MERGE.md`](PHASE3_DEEPSEEK_MERGE.md) — dataset construction
+6. [`PHASE4_6_TRAINING_RESULTS.md`](PHASE4_6_TRAINING_RESULTS.md) — **the main document**: the collapse, both bugs, the successful run
+7. [`PHASE7_END_TO_END.md`](PHASE7_END_TO_END.md) — evaluation with real retrieval
+8. [`PHASE8_DEPLOYMENT_PLAN.md`](PHASE8_DEPLOYMENT_PLAN.md) — deployment constraints
+9. [`SPIKE_RUN_STATE.md`](SPIKE_RUN_STATE.md) — earlier stack bugs and their fixes
+
+Pre-project planning material that the measurements overturned is kept in
+[`docs/superseded/`](docs/superseded/) rather than deleted.
 
 ---
 

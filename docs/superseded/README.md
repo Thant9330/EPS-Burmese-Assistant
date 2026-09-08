@@ -24,3 +24,20 @@ kept rather than quietly deleted: it is the clearest illustration in this reposi
 the project measures before deciding.
 
 See [`PHASE0_TOKENIZER_RESULTS.md`](../../PHASE0_TOKENIZER_RESULTS.md).
+
+
+## `EPS_BURMESE_QLORA_PLAN.md`
+
+The project plan, written before any code ran. Three of its assumptions were disproved by
+the work itself:
+
+| the plan assumed | what was measured |
+|---|---|
+| Train with **Unsloth** | Unsloth returned logits shifted one position on `transformers 5.5.0`, training the model to predict the *previous* token. Switched to plain `transformers` + `peft` + `trl`. |
+| The Burmese query must be **translated to English** before retrieval | Not needed. `bge-m3` matches Burmese queries against English chunks directly — 80% hit@5. |
+| The base model is **weak at Burmese**, so fluency is "the measurable delta" | False. SEA-LION already wrote fluent Burmese. The fine-tune taught task conventions, not the language. |
+
+What it got right, and which held all the way through: keeping facts in the retrieval corpus
+rather than the weights, preserving Korean official terms verbatim so a worker can say them
+at the 고용센터, and choosing a task where the base model visibly fails — sound reasoning,
+even though the predicted failure turned out to be the wrong one.
