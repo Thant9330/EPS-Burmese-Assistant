@@ -43,7 +43,7 @@ OVERLAP_TOKENS = 50
 DELAY_S = 1.5  # be polite to government servers
 
 UA = {"User-Agent": "Mozilla/5.0 (compatible; EPS-Burmese-Assistant/0.1; "
-                    "non-commercial research; +https://github.com/Thant9330/EPS-Burmese-Assistant)"}
+                    "non-commercial research; +https://github.com/MYOTHANTZIN-THANT/EPS-Burmese-Assistant)"}
 
 NOISE = [
     "\uce74\uce74\uc624\ud1a1", "\ud398\uc774\uc2a4\ubd81", "\ud2b8\uc704\ud130", "\ub77c\uc778",
