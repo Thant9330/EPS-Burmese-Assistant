@@ -1,5 +1,25 @@
 # Burmese EPS/E-9 Visa Assistant — QLoRA Learning Project
 
+> **STATUS: original plan, written before any code ran. Kept as the starting point; three
+> of its assumptions were later disproved by measurement.** See
+> [`README.md`](README.md) for what was actually built and found.
+>
+> | the plan assumed | what was measured |
+> |---|---|
+> | Train with **Unsloth** | Unsloth returned logits shifted one position on `transformers 5.5.0`, training the model to predict the *previous* token. Switched to plain `transformers` + `peft` + `trl` — [`PHASE4_6_TRAINING_RESULTS.md`](PHASE4_6_TRAINING_RESULTS.md) |
+> | Burmese query must be **translated to English** before retrieval (see the architecture diagram below) | Not needed. `bge-m3` matches Burmese queries against English chunks directly: 80% hit@5 against a 90% ceiling set by human translation — [`PHASE2_RETRIEVAL_RESULTS.md`](PHASE2_RETRIEVAL_RESULTS.md) |
+> | The base model is **weak at Burmese**, so fluency is "the measurable delta" | False. SEA-LION already wrote fluent Burmese. The fine-tune taught *task conventions* — source citation, Korean term retention (5/30 → 18/30), honest refusal — not the language |
+>
+> **What the plan got right**, and which held up all the way through:
+>
+> - *"Facts live in the retrieval corpus, so they can be updated without retraining. This is
+>   the correct division of labor and is the single most important thing to internalize."*
+>   Correct, and it is why the corpus can grow without touching the model.
+> - Preserving Korean official terms verbatim so a worker can say them at the 고용센터. That
+>   became the single largest measured gain.
+> - Choosing a task where the base model visibly fails. The reasoning was sound even though
+>   the predicted failure (Burmese fluency) turned out to be the wrong one.
+
 ## Context
 
 The goal is **learning QLoRA/Unsloth hands-on** on a project that is genuinely useful, not a
