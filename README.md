@@ -14,6 +14,15 @@ most write-ups skip — an evaluation honest enough to say where it fails.
 
 **Status: research prototype. Not a service, and not safe to act on without verification.**
 
+| | |
+|---|---|
+| 🤗 **Adapter** | [MYOTHANTZIN/eps-burmese-sealion-9b-lora](https://huggingface.co/MYOTHANTZIN/eps-burmese-sealion-9b-lora) |
+| 🤗 **Dataset & benchmark** | [MYOTHANTZIN/eps-burmese-qa](https://huggingface.co/datasets/MYOTHANTZIN/eps-burmese-qa) |
+
+> **If you use the adapter:** load it with `PeftModel.from_pretrained` and do **not**
+> `merge_and_unload()` into 4-bit weights — merging rounds the LoRA delta away and silently
+> gives you the base model back. See [the bug section](#2-merge_and_unload-silently-deletes-a-lora-on-4-bit-weights).
+
 ---
 
 ## Results
@@ -223,6 +232,9 @@ caught this project twice.
 | `data/eval/end2end_retrieved.json` | end-to-end with real retrieval |
 | `data/eval/demo_log.jsonl` | 30 logged interactions from live testing |
 | `data/refusal_variants.txt` | 15 owner-written refusal phrasings |
+
+The dataset and benchmark results are also published on the Hugging Face Hub, where they
+load directly with `load_dataset("MYOTHANTZIN/eps-burmese-qa")`.
 
 ---
 
