@@ -174,7 +174,7 @@ nor the retriever can detect the condition.
 **It refuses long questions.** Training questions had a median length of 52 characters. Real
 questions run 90–170. The same question asked long refuses and asked short answers, with
 identical retrieved sources — so this is a training-distribution problem, not a coverage one.
-26 real questions logged during live testing show the pattern.
+30 interactions logged during live testing show the pattern.
 
 **Retrieval hit@5 is 77–82%**, and that figure is measured on questions written *from* the
 corpus, so it is a ceiling rather than real-world performance.
@@ -201,6 +201,16 @@ python scripts/phase4_build_eval_split.py      # held-out split
 
 Training and evaluation ran in Colab; the notebook is `notebooks/`.
 
+To check the headline numbers without rerunning anything:
+
+```bash
+python scripts/verify_results.py
+```
+
+It recomputes every figure in the results table from `data/eval/full50_base_vs_tuned.json`
+and asserts that the two conditions are not accidentally the same model — the failure that
+caught this project twice.
+
 ### What is committed
 
 | path | what |
@@ -211,7 +221,7 @@ Training and evaluation ran in Colab; the notebook is `notebooks/`.
 | `data/eval/phase4_holdout_v2.jsonl` | 50 held-out questions |
 | `data/eval/full50_base_vs_tuned.json` | headline result, 100 generations |
 | `data/eval/end2end_retrieved.json` | end-to-end with real retrieval |
-| `data/eval/demo_log.jsonl` | 26 real questions from live testing |
+| `data/eval/demo_log.jsonl` | 30 logged interactions from live testing |
 | `data/refusal_variants.txt` | 15 owner-written refusal phrasings |
 
 ---
